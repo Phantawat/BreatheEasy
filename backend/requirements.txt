@@ -1,7 +1,5 @@
 fastapi 
 uvicorn 
-sqlalchemy 
-pymysql 
 python-dotenv 
-pandas 
-scikit-learn
+mysql-connector-python 
+pydantic
