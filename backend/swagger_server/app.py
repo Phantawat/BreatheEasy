@@ -8,7 +8,7 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
-from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id
+from .controller.aqicn_controller import get_all_aqicn_data
 
 app = FastAPI(title="Air Quality Monitoring API")
 
@@ -35,7 +35,7 @@ def read_aqicn_data(
     Retrieve AQICN data with optional date filtering.
     """
     try:
-        return get_all_aqicn_data(skip=skip, limit=limit, start_date=start_date, end_date=end_date)
+        return get_all_aqicn_data()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
