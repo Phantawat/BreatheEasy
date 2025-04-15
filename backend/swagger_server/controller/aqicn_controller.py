@@ -25,7 +25,7 @@ def get_aqicn_data_by_id(aqicn_id: int):
         return None
     
     # Convert result to AQICN model
-    aqicn_data = AQICN(**result)
+    aqicn_data = AQICN(**result[0])
     
     return aqicn_data
 
