@@ -6,7 +6,7 @@ def get_all_aqicn_data():
     """
     Fetch all AQICN data from the database.
     """
-    query = "SELECT * FROM aqicn_data"
+    query = "SELECT * FROM project_aqicn"
     result = execute_query(query)
     
     # Convert result to list of AQICN models
@@ -18,14 +18,14 @@ def get_aqicn_data_by_id(aqicn_id: int):
     """
     Fetch AQICN data by ID from the database.
     """
-    query = "SELECT * FROM aqicn_data WHERE id = %s"
+    query = "SELECT * FROM project_aqicn WHERE id = %s"
     result = execute_query(query, (aqicn_id,))
     
     if not result:
         return None
     
     # Convert result to AQICN model
-    aqicn_data = AQICN(**result[0])
+    aqicn_data = AQICN(**result)
     
     return aqicn_data
 
