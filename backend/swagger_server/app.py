@@ -8,7 +8,7 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
-from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id
+from .controller.aqicn_controller import get_all_aqicn_data
 
 app = FastAPI(title="Air Quality Monitoring API")
 
@@ -40,7 +40,7 @@ def read_aqicn_data_by_id(aqicn_id: int):
     Retrieve AQICN data by ID.
     """
     try:
-        aqicn_data = get_aqicn_data_by_id(aqicn_id)
+        aqicn_data = read_aqicn_data_by_id(aqicn_id)
         if not aqicn_data:
             raise HTTPException(status_code=404, detail="AQICN data not found")
         return aqicn_data
