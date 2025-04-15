@@ -25,17 +25,25 @@ def read_root():
     return {"message": "Welcome to the Air Quality Monitoring API"}
 
 @app.get("/aqicn", response_model=List[AQICN])
-def read_aqicn_data(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, gt=0),
-    start_date: Optional[datetime] = Query(None),
-    end_date: Optional[datetime] = Query(None)
-):
+def read_aqicn_data():
     """
     Retrieve AQICN data with optional date filtering.
     """
     try:
-        return get_all_aqicn_data(skip=skip, limit=limit, start_date=start_date, end_date=end_date)
+        return get_all_aqicn_data()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/aqicn/{aqicn_id}", response_model=AQICN)
+def read_aqicn_data_by_id(aqicn_id: int):
+    """
+    Retrieve AQICN data by ID.
+    """
+    try:
+        aqicn_data = get_aqicn_data_by_id(aqicn_id)
+        if not aqicn_data:
+            raise HTTPException(status_code=404, detail="AQICN data not found")
+        return aqicn_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
