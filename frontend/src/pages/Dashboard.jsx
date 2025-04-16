@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchLatestReports } from "../services/api";
+import "../styles/Dashboard.css"; // ← Import CSS
 
 function Dashboard() {
   const [data, setData] = useState({
@@ -11,51 +12,53 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchLatestReports()
-      .then(res => {
-        setData(res);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Error fetching reports:", err);
-        setError("Unable to fetch latest reports.");
-        setLoading(false);
-      });
-  }, []);
+//   useEffect(() => {
+//     fetchLatestReports()
+//       .then(res => {
+//         setData(res);
+//         setLoading(false);
+//       })
+//       .catch(err => {
+//         console.error("Error fetching reports:", err);
+//         setError("Unable to fetch latest reports.");
+//         setLoading(false);
+//       });
+//   }, []);
 
-  if (loading) return <p>Loading latest report...</p>;
-  if (error) return <p>Error: {error}</p>;
+//   if (loading) return <div className="loading">Loading latest report...</div>;
+//   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div>
-      <h1>Welcome to BreatheEasy</h1>
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">🌿 Welcome to BreatheEasy</h1>
 
-      <section>
-        <h2>Latest Reports</h2>
-        <div>
-          <h3>AQI</h3>
-          <p>Value: {data.aqi?.value}</p>
-          <p>Location: {data.aqi?.location}</p>
-        </div>
-        <div>
-          <h3>Sensor</h3>
-          <p>Temperature: {data.sensor?.temperature} °C</p>
-          <p>Humidity: {data.sensor?.humidity} %</p>
-        </div>
-        <div>
-          <h3>Weather</h3>
-          <p>Condition: {data.weather?.condition}</p>
-          <p>Temperature: {data.weather?.temperature} °C</p>
+      <section className="report-section">
+        <h2 className="section-title">📊 Latest Reports</h2>
+        <div className="report-cards">
+          <div className="card aqi-card">
+            <h3>AQI</h3>
+            <p><strong>Value:</strong> {data.aqi?.value}</p>
+            <p><strong>Location:</strong> {data.aqi?.location}</p>
+          </div>
+          <div className="card sensor-card">
+            <h3>Sensor</h3>
+            <p><strong>Temperature:</strong> {data.sensor?.temperature} °C</p>
+            <p><strong>Humidity:</strong> {data.sensor?.humidity} %</p>
+          </div>
+          <div className="card weather-card">
+            <h3>Weather</h3>
+            <p><strong>Condition:</strong> {data.weather?.condition}</p>
+            <p><strong>Temperature:</strong> {data.weather?.temperature} °C</p>
+          </div>
         </div>
       </section>
 
-      <section>
-        <h2>Explore All Data</h2>
-        <ul>
-          <li><Link to="/aqi">View All AQI Data</Link></li>
-          <li><Link to="/sensor">View All Sensor Data</Link></li>
-          <li><Link to="/weather">View All Weather Data</Link></li>
+      <section className="links-section">
+        <h2 className="section-title">🔍 Explore All Data</h2>
+        <ul className="data-links">
+          <li><Link to="/aqi">🌬️ View All AQI Data</Link></li>
+          <li><Link to="/sensor">📟 View All Sensor Data</Link></li>
+          <li><Link to="/weather">🌦️ View All Weather Data</Link></li>
         </ul>
       </section>
     </div>
