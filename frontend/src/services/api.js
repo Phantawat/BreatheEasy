@@ -10,20 +10,37 @@ const api = axios.create({
     },
 });
 
-export const stationsApi = {
-    getAll: () => api.get('/stations'),
-    getById: (id) => api.get(`/stations/${id}`),
-    create: (data) => api.post('/stations', data),
-};
 
-export const readingsApi = {
-    getCurrent: () => api.get('/readings/current'),
-    getHistorical: (params) => api.get('/readings/historical', { params }),
-    create: (data) => api.post('/readings', data),
-};
+export const aqicnApi = {
+    getAllData: () => api.get('/aqicn'),
+    getDataById: (id) => api.get(`/aqicn/${id}`),
+    getDataByDate: (date) => api.get(`/aqicn/date/${date}`),
+    getLatestData: () => api.get('/aqicn/latest'),
+}
 
-export const predictionsApi = {
-    predict: (data) => api.post('/predictions', data),
-};
+export const sensorApi = {
+    getAllData: () => api.get('/sensor'),
+    getDataById: (id) => api.get(`/sensor/${id}`),
+    getDataByDate: (date) => api.get(`/sensor/date/${date}`),
+    getLatestData: () => api.get('/sensor/latest'),
+}
+
+export const weatherApi = {
+    getAllData: () => api.get('/weather'),
+    getDataById: (id) => api.get(`/weather/${id}`),
+    getDataByDate: (date) => api.get(`/weather/date/${date}`),
+    getLatestData: () => api.get('/weather/latest'),
+}
+
+export async function fetchLatestReports() {
+  const [aqi, sensor, weather] = await Promise.all([
+    fetch("/aqicn/latest").then(res => res.json()),
+    fetch("/sensor/latest").then(res => res.json()),
+    fetch("/weather/latest").then(res => res.json())
+  ]);
+
+  return { aqi, sensor, weather };
+}
+
 
 export default api;

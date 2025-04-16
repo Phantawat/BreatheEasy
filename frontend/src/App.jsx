@@ -1,17 +1,16 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './routes';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import './styles/App.css';
+import './styles/App.css'; // for minimal styling
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="app-container">
         <Navbar />
-        <main className="content">
+        <main className="main-content">
           <AppRoutes />
         </main>
         <Footer />
