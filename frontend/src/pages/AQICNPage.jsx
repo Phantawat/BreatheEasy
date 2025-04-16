@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { aqicnApi } from '../services/api';
+import '../styles/AQICN.css'; // ← import the new CSS
 
 const LatestAQICN = () => {
   const [data, setData] = useState(null);
@@ -14,25 +15,17 @@ const LatestAQICN = () => {
       });
   }, []);
 
-  if (error) return <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>;
-  if (!data) return <p style={{ textAlign: 'center' }}>Loading...</p>;
+  if (error) return <p className="aqicn-error">{error}</p>;
+  if (!data) return <p className="aqicn-loading">Loading...</p>;
 
   return (
-    <div style={{
-      maxWidth: '400px',
-      margin: '2rem auto',
-      padding: '1.5rem',
-      borderRadius: '12px',
-      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-      backgroundColor: '#f9f9f9',
-      fontFamily: 'sans-serif'
-    }}>
-      <h2 style={{ marginBottom: '1rem', fontSize: '1.5rem', color: '#333' }}>Latest Air Quality</h2>
-      <div style={{ lineHeight: '1.6', color: '#555' }}>
-        <p><strong>Timestamp:</strong><br /> {new Date(data.ts).toLocaleString()}</p>
-        <p><strong>PM2.5:</strong> {data.pm25}</p>
-        <p><strong>PM10:</strong> {data.pm10}</p>
-        <p><strong>AQI Score:</strong> {data.aqi_score}</p>
+    <div className="aqicn-card">
+      <h2 className="aqicn-title">🌫️ Latest Air Quality</h2>
+      <div className="aqicn-details">
+        <p><strong>📅 Timestamp:</strong><br /> {new Date(data.ts).toLocaleString()}</p>
+        <p><strong>🌬️ PM2.5:</strong> {data.pm25}</p>
+        <p><strong>🌪️ PM10:</strong> {data.pm10}</p>
+        <p><strong>📈 AQI Score:</strong> {data.aqi_score}</p>
       </div>
     </div>
   );

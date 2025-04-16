@@ -37,8 +37,8 @@ function Dashboard() {
         <div className="report-cards">
           <div className="card aqi-card">
             <h3>AQI</h3>
-            <p><strong>Value:</strong> {data.aqi?.value}</p>
-            <p><strong>Location:</strong> {data.aqi?.location}</p>
+            <p><strong>AQI:</strong> {data.aqi?.aqicn_score}</p>
+            <p><strong>PM2.5:</strong> {data.aqi?.pm25}</p>
           </div>
           <div className="card sensor-card">
             <h3>Sensor</h3>
@@ -47,7 +47,7 @@ function Dashboard() {
           </div>
           <div className="card weather-card">
             <h3>Weather</h3>
-            <p><strong>Condition:</strong> {data.weather?.condition}</p>
+            <p><strong>Wind Speed:</strong> {data.weather?.wind_speed}</p>
             <p><strong>Temperature:</strong> {data.weather?.temperature} °C</p>
           </div>
         </div>
