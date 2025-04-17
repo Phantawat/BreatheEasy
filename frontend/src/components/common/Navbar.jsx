@@ -1,9 +1,17 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./Navbar.css"; // 👈 Import the stylesheet
+import "./Navbar.css";
 
 const Navbar = () => {
   const location = useLocation();
+
+  const links = [
+    { path: "/", label: "Dashboard", icon: "🏠" },
+    { path: "/aqicn", label: "AQICN", icon: "🌫️" },
+    { path: "/sensor", label: "Sensor", icon: "📟" },
+    { path: "/weather", label: "Weather", icon: "🌦️" },
+    { path: "/prediction", label: "Prediction", icon: "🔮" },
+  ];
 
   return (
     <nav className="navbar">
@@ -11,12 +19,13 @@ const Navbar = () => {
         <Link to="/">BreatheEasy 🌿</Link>
       </div>
       <ul className="nav-links">
-        <li className={location.pathname === '/' ? 'active' : ''}>
-          <Link to="/">Dashboard</Link>
-        </li>
-        <li className={location.pathname === '/aqicn' ? 'active' : ''}>
-          <Link to="/aqicn">AQICN</Link>
-        </li>
+        {links.map(link => (
+          <li key={link.path} className={location.pathname === link.path ? 'active' : ''}>
+            <Link to={link.path} title={link.label}>
+              <span role="img" aria-label={link.label}>{link.icon}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

@@ -8,20 +8,35 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  ReferenceArea
 } from 'recharts';
 import '../styles/Shared.css';
+
+const ThresholdLegend = () => (
+  <div className="card">
+    <h2 className="card-title">📘 Threshold Key</h2>
+    <ul style={{ lineHeight: '1.8', fontSize: '0.95rem', paddingLeft: '1rem' }}>
+      <li><strong style={{ color: 'green' }}>Green</strong> — Good / Optimal levels</li>
+      <li><strong style={{ color: 'yellow' }}>Yellow</strong> — Moderate levels</li>
+      <li><strong style={{ color: 'orange' }}>Orange</strong> — Caution / Less optimal</li>
+      <li><strong style={{ color: 'red' }}>Red</strong> — High / Unhealthy levels</li>
+      <li><strong style={{ color: 'lightblue' }}>Light Blue</strong> — Comfortable temperature</li>
+    </ul>
+  </div>
+);
 
 const SensorPage = () => {
   const [latestData, setLatestData] = useState(null);
   const [monthlyData, setMonthlyData] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [dateData, setDateData] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAll = async () => {
       setLoading(true);
       try {
         const latestRes = await sensorApi.getLatestData();
@@ -34,8 +49,11 @@ const SensorPage = () => {
         }));
         setMonthlyData(monthly);
 
+        const datesRes = await sensorApi.getAvailableDates();
+        setAvailableDates(datesRes.data);
+
         const today = new Date().toISOString().split('T')[0];
-        setSelectedDate(today);
+        setSelectedDate(datesRes.data.includes(today) ? today : datesRes.data[0] || '');
       } catch (err) {
         console.error("Sensor fetch error:", err);
         setError("Failed to load sensor data.");
@@ -44,7 +62,7 @@ const SensorPage = () => {
       }
     };
 
-    fetchData();
+    fetchAll();
   }, []);
 
   const handleDateChange = (e) => {
@@ -60,8 +78,6 @@ const SensorPage = () => {
       setDateData(response.data);
       setError('');
     } catch (err) {
-      console.error("Sensor date fetch error:", err);
-      setError(`Failed to load data for ${selectedDate}.`);
       setDateData([]);
     } finally {
       setLoading(false);
@@ -76,29 +92,31 @@ const SensorPage = () => {
   return (
     <div className="page-wrapper">
       <h1 className="page-title">📟 Sensor Dashboard</h1>
-
       <div className="grid-row">
-        {/* Date Picker */}
-        <div className="card narrow">
-          <h2 className="card-title">📆 Select Date</h2>
-          <form onSubmit={handleSubmit} className="date-form">
+      <div className="card narrow">
+        <h2 className="card-title">📆 Select Date</h2>
+        <form onSubmit={handleSubmit} className="date-form">
             <div className="form-group">
-              <label htmlFor="date-picker">Select a date:</label>
-              <input
-                type="date"
+            <label htmlFor="date-picker">Select a date:</label>
+            <select
                 id="date-picker"
                 value={selectedDate}
                 onChange={handleDateChange}
                 className="date-input"
-              />
+            >
+                {availableDates.map(date => (
+                <option key={date} value={date}>{date}</option>
+                ))}
+            </select>
             </div>
             <button type="submit" className="button" disabled={loading}>
-              {loading ? 'Loading...' : 'Get Data'}
+            {loading ? 'Loading...' : 'Get Data'}
             </button>
-          </form>
+            {error && <p className="error" style={{ marginTop: '0.5rem' }}>{error}</p>}
+        </form>
         </div>
 
-        {/* Latest Data */}
+
         {latestData && (
           <div className="card wide">
             <h2 className="card-title">🔍 Latest Sensor Reading</h2>
@@ -115,7 +133,7 @@ const SensorPage = () => {
         )}
       </div>
 
-      {/* Table */}
+      {/* Table: Sensor Data for Selected Date */}
       {dateData.length > 0 && (
         <div className="card">
           <h2 className="card-title">🗓️ Sensor Data for {selectedDate}</h2>
@@ -124,7 +142,7 @@ const SensorPage = () => {
               <thead>
                 <tr>
                   <th>Time</th>
-                  <th>Temp (°C)</th>
+                  <th>Temperature (°C)</th>
                   <th>Humidity (%)</th>
                   <th>PM2.5</th>
                   <th>PM10</th>
@@ -152,85 +170,89 @@ const SensorPage = () => {
         </div>
       )}
 
-      {dateData.length === 0 && !loading && selectedDate && !error && (
-        <div className="card">
-          <p className="no-data">No data available for {selectedDate}.</p>
+    {dateData.length === 0 && !loading && selectedDate && !error && (
+        <div className="aqicn-card">
+          <p className="aqicn-no-data">No data available for {selectedDate}.</p>
         </div>
       )}
 
-      {error && <p className="error">{error}</p>}
-      {loading && <p className="loading">Loading data...</p>}
+      <ThresholdLegend />
 
-      {/* Chart 1: Temperature & Humidity */}
+      {/* Charts with thresholds */}
       {monthlyData.length > 0 && (
-        <div className="chart-container">
-          <h2 className="card-title">🌡️ Temperature & Humidity</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="timestamp"
-                tickFormatter={(str) => new Date(str).toLocaleDateString()}
-                minTickGap={40}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="temperature"
-                stroke="#f97316"
-                name="Temperature"
-                strokeWidth={2}
-                dot={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="humidity"
-                stroke="#38bdf8"
-                name="Humidity"
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+        <>
+          {/* Temperature */}
+          <div className="chart-container">
+            <h2 className="card-title">🌡️ Temperature Trends</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <ReferenceArea y1={20} y2={27} fill="lightblue" fillOpacity={0.2} />
+                <ReferenceArea y1={28} y2={32} fill="orange" fillOpacity={0.2} />
+                <ReferenceArea y1={33} y2={50} fill="red" fillOpacity={0.2} />
+                <Line type="monotone" dataKey="temperature" stroke="#f97316" strokeWidth={2} dot={false} name="Temperature" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
 
-      {/* Chart 2: PM2.5 & PM10 */}
-      {monthlyData.length > 0 && (
-        <div className="chart-container">
-          <h2 className="card-title">🌬️ PM2.5 & PM10 Trends</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="timestamp"
-                tickFormatter={(str) => new Date(str).toLocaleDateString()}
-                minTickGap={40}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="pm25"
-                stroke="#16a34a"
-                name="PM2.5"
-                strokeWidth={2}
-                dot={{ r: 2 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="pm10"
-                stroke="#6366f1"
-                name="PM10"
-                strokeWidth={2}
-                dot={{ r: 2 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+          {/* Humidity */}
+          <div className="chart-container">
+            <h2 className="card-title">💧 Humidity Trends</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <ReferenceArea y1={30} y2={60} fill="green" fillOpacity={0.2} />
+                <ReferenceArea y1={0} y2={30} fill="orange" fillOpacity={0.1} />
+                <ReferenceArea y1={60} y2={100} fill="orange" fillOpacity={0.1} />
+                <Line type="monotone" dataKey="humidity" stroke="#38bdf8" strokeWidth={2} dot={false} name="Humidity" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* PM2.5 */}
+          <div className="chart-container">
+            <h2 className="card-title">🌬️ PM2.5 Trends</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <ReferenceArea y1={0} y2={12} fill="green" fillOpacity={0.2} />
+                <ReferenceArea y1={13} y2={35} fill="yellow" fillOpacity={0.2} />
+                <ReferenceArea y1={36} y2={500} fill="red" fillOpacity={0.2} />
+                <Line type="monotone" dataKey="pm25" stroke="#16a34a" strokeWidth={2} dot={false} name="PM2.5" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* PM10 */}
+          <div className="chart-container">
+            <h2 className="card-title">🌪️ PM10 Trends</h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <ReferenceArea y1={0} y2={54} fill="green" fillOpacity={0.2} />
+                <ReferenceArea y1={55} y2={154} fill="yellow" fillOpacity={0.2} />
+                <ReferenceArea y1={155} y2={500} fill="red" fillOpacity={0.2} />
+                <Line type="monotone" dataKey="pm10" stroke="#6366f1" strokeWidth={2} dot={false} name="PM10" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </>
       )}
     </div>
   );

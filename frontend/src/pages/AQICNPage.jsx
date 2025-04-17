@@ -8,14 +8,30 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  ReferenceArea
 } from 'recharts';
 import '../styles/AQICN.css';
+
+const ThresholdLegend = () => (
+  <div className="aqicn-card">
+    <h2 className="aqicn-title">📘 PM2.5 Threshold Legend</h2>
+    <ul style={{ lineHeight: '1.8', fontSize: '0.95rem', paddingLeft: '1rem' }}>
+      <li><strong style={{ color: 'green' }}>Green</strong> — Good (0.0 – 12.0)</li>
+      <li><strong style={{ color: 'yellow' }}>Yellow</strong> — Moderate (12.1 – 35.4)</li>
+      <li><strong style={{ color: 'orange' }}>Orange</strong> — Unhealthy for Sensitive Groups (35.5 – 55.4)</li>
+      <li><strong style={{ color: 'red' }}>Red</strong> — Unhealthy (55.5 – 150.4)</li>
+      <li><strong style={{ color: 'purple' }}>Purple</strong> — Very Unhealthy (150.5 – 250.4)</li>
+      <li><strong style={{ color: 'maroon' }}>Maroon</strong> — Hazardous (250.5 – 500.4)</li>
+    </ul>
+  </div>
+);
 
 const AQICNPage = () => {
   const [latestData, setLatestData] = useState(null);
   const [monthlyData, setMonthlyData] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
+  const [availableDates, setAvailableDates] = useState([]);
   const [dateData, setDateData] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,6 +49,10 @@ const AQICNPage = () => {
           timestamp: new Date(item.ts).toLocaleString(),
         }));
         setMonthlyData(monthly);
+
+        // 3. Fetch available dates
+        const datesRes = await aqicnApi.getAvailableDates();
+        setAvailableDates(datesRes.data);
 
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
@@ -77,34 +97,29 @@ const AQICNPage = () => {
   return (
     <div className="aqicn-wrapper">
       <h1 className="aqicn-page-title">🌿 AQICN Dashboard</h1>
-
-      {/* Grid: Selector (Left) + Latest AQI (Right) */}
       <div className="aqicn-grid-row">
-        {/* Date Selector */}
         <div className="aqicn-card narrow">
           <h2 className="aqicn-title">📆 Select Date</h2>
-          <form onSubmit={handleSubmit} className="aqicn-date-form">
-            <div className="aqicn-form-group">
+          <form onSubmit={handleSubmit} className="date-form">
+            <div className="form-group">
               <label htmlFor="date-picker">Select a date:</label>
-              <input
-                type="date"
+              <select
                 id="date-picker"
                 value={selectedDate}
                 onChange={handleDateChange}
-                className="aqicn-date-input"
-              />
+                className="date-input"
+              >
+                {availableDates.map(date => (
+                  <option key={date} value={date}>{date}</option>
+                ))}
+              </select>
             </div>
-            <button 
-              type="submit" 
-              className="aqicn-button"
-              disabled={loading}
-            >
+            <button type="submit" className="button" disabled={loading}>
               {loading ? 'Loading...' : 'Get Data'}
             </button>
           </form>
         </div>
 
-        {/* Latest AQI Data */}
         {latestData && (
           <div className="aqicn-card wide">
             <h2 className="aqicn-title">🌫️ Latest Air Quality</h2>
@@ -118,7 +133,6 @@ const AQICNPage = () => {
         )}
       </div>
 
-      {/* Table: Data by Date */}
       {dateData.length > 0 && (
         <div className="aqicn-card">
           <h2 className="aqicn-title">🗓️ Air Quality for {selectedDate}</h2>
@@ -147,30 +161,77 @@ const AQICNPage = () => {
         </div>
       )}
 
-      {/* No Data Message */}
       {dateData.length === 0 && !loading && selectedDate && !error && (
         <div className="aqicn-card">
           <p className="aqicn-no-data">No data available for {selectedDate}.</p>
         </div>
       )}
 
-      {/* Error & Loading */}
       {error && <p className="aqicn-error">{error}</p>}
       {loading && <p className="aqicn-loading">Loading data...</p>}
 
-      {/* Monthly Line Chart */}
+      <ThresholdLegend />
+
+      {/* Chart 1: PM2.5 */}
       {monthlyData.length > 0 && (
         <div className="aqicn-chart-container">
-          <h2 className="aqicn-title">📈 AQICN Trends This Month</h2>
-          <ResponsiveContainer width="100%" height={400}>
+          <h2 className="aqicn-title">📊 PM2.5 Trends</h2>
+          <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: -10, bottom: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="timestamp" minTickGap={20} />
+              <XAxis
+                dataKey="timestamp"
+                tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                minTickGap={40}
+              />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="pm25" stroke="#f97316" name="PM2.5" strokeWidth={2} />
-              <Line type="monotone" dataKey="pm10" stroke="#38bdf8" name="PM10" strokeWidth={2} />
+              <ReferenceArea y1={0} y2={12.0} fill="green" fillOpacity={0.2} />
+              <ReferenceArea y1={12.1} y2={35.4} fill="yellow" fillOpacity={0.2} />
+              <ReferenceArea y1={35.5} y2={55.4} fill="orange" fillOpacity={0.2} />
+              <ReferenceArea y1={55.5} y2={150.4} fill="red" fillOpacity={0.2} />
+              <ReferenceArea y1={150.5} y2={250.4} fill="purple" fillOpacity={0.2} />
+              <ReferenceArea y1={250.5} y2={500.4} fill="maroon" fillOpacity={0.2} />
+              <Line
+                type="monotone"
+                dataKey="pm25"
+                stroke="#f97316"
+                name="PM2.5"
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* Chart 2: PM10 */}
+      {monthlyData.length > 0 && (
+        <div className="aqicn-chart-container">
+          <h2 className="aqicn-title">📊 PM10 Trends</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: -10, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="timestamp"
+                tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                minTickGap={40}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <ReferenceArea y1={0} y2={54} fill="green" fillOpacity={0.2} />
+              <ReferenceArea y1={55} y2={154} fill="yellow" fillOpacity={0.2} />
+              <ReferenceArea y1={155} y2={500} fill="red" fillOpacity={0.2} />
+              <Line
+                type="monotone"
+                dataKey="pm10"
+                stroke="#38bdf8"
+                name="PM10"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
