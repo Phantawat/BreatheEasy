@@ -31,11 +31,12 @@ const SensorPage = () => {
   const [monthlyData, setMonthlyData] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [dateData, setDateData] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAll = async () => {
       setLoading(true);
       try {
         const latestRes = await sensorApi.getLatestData();
@@ -48,8 +49,11 @@ const SensorPage = () => {
         }));
         setMonthlyData(monthly);
 
+        const datesRes = await sensorApi.getAvailableDates();
+        setAvailableDates(datesRes.data);
+
         const today = new Date().toISOString().split('T')[0];
-        setSelectedDate(today);
+        setSelectedDate(datesRes.data.includes(today) ? today : datesRes.data[0] || '');
       } catch (err) {
         console.error("Sensor fetch error:", err);
         setError("Failed to load sensor data.");
@@ -58,7 +62,7 @@ const SensorPage = () => {
       }
     };
 
-    fetchData();
+    fetchAll();
   }, []);
 
   const handleDateChange = (e) => {
@@ -74,8 +78,6 @@ const SensorPage = () => {
       setDateData(response.data);
       setError('');
     } catch (err) {
-      console.error("Sensor date fetch error:", err);
-      setError(`Failed to load data for ${selectedDate}.`);
       setDateData([]);
     } finally {
       setLoading(false);
@@ -91,24 +93,29 @@ const SensorPage = () => {
     <div className="page-wrapper">
       <h1 className="page-title">📟 Sensor Dashboard</h1>
       <div className="grid-row">
-        <div className="card narrow">
-          <h2 className="card-title">📆 Select Date</h2>
-          <form onSubmit={handleSubmit} className="date-form">
+      <div className="card narrow">
+        <h2 className="card-title">📆 Select Date</h2>
+        <form onSubmit={handleSubmit} className="date-form">
             <div className="form-group">
-              <label htmlFor="date-picker">Select a date:</label>
-              <input
-                type="date"
+            <label htmlFor="date-picker">Select a date:</label>
+            <select
                 id="date-picker"
                 value={selectedDate}
                 onChange={handleDateChange}
                 className="date-input"
-              />
+            >
+                {availableDates.map(date => (
+                <option key={date} value={date}>{date}</option>
+                ))}
+            </select>
             </div>
             <button type="submit" className="button" disabled={loading}>
-              {loading ? 'Loading...' : 'Get Data'}
+            {loading ? 'Loading...' : 'Get Data'}
             </button>
-          </form>
+            {error && <p className="error" style={{ marginTop: '0.5rem' }}>{error}</p>}
+        </form>
         </div>
+
 
         {latestData && (
           <div className="card wide">
@@ -125,6 +132,49 @@ const SensorPage = () => {
           </div>
         )}
       </div>
+
+      {/* Table: Sensor Data for Selected Date */}
+      {dateData.length > 0 && (
+        <div className="card">
+          <h2 className="card-title">🗓️ Sensor Data for {selectedDate}</h2>
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Temperature (°C)</th>
+                  <th>Humidity (%)</th>
+                  <th>PM2.5</th>
+                  <th>PM10</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                  <th>Room ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dateData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{new Date(item.timestamp).toLocaleTimeString()}</td>
+                    <td>{item.temperature}</td>
+                    <td>{item.humidity}</td>
+                    <td>{item.pm25}</td>
+                    <td>{item.pm10}</td>
+                    <td>{item.latitude}</td>
+                    <td>{item.longitude}</td>
+                    <td>{item.room_id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+    {dateData.length === 0 && !loading && selectedDate && !error && (
+        <div className="aqicn-card">
+          <p className="aqicn-no-data">No data available for {selectedDate}.</p>
+        </div>
+      )}
 
       <ThresholdLegend />
 

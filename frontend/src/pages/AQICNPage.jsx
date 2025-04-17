@@ -31,6 +31,7 @@ const AQICNPage = () => {
   const [latestData, setLatestData] = useState(null);
   const [monthlyData, setMonthlyData] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
+  const [availableDates, setAvailableDates] = useState([]);
   const [dateData, setDateData] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,10 @@ const AQICNPage = () => {
           timestamp: new Date(item.ts).toLocaleString(),
         }));
         setMonthlyData(monthly);
+
+        // 3. Fetch available dates
+        const datesRes = await aqicnApi.getAvailableDates();
+        setAvailableDates(datesRes.data);
 
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
@@ -95,18 +100,21 @@ const AQICNPage = () => {
       <div className="aqicn-grid-row">
         <div className="aqicn-card narrow">
           <h2 className="aqicn-title">📆 Select Date</h2>
-          <form onSubmit={handleSubmit} className="aqicn-date-form">
-            <div className="aqicn-form-group">
+          <form onSubmit={handleSubmit} className="date-form">
+            <div className="form-group">
               <label htmlFor="date-picker">Select a date:</label>
-              <input
-                type="date"
+              <select
                 id="date-picker"
                 value={selectedDate}
                 onChange={handleDateChange}
-                className="aqicn-date-input"
-              />
+                className="date-input"
+              >
+                {availableDates.map(date => (
+                  <option key={date} value={date}>{date}</option>
+                ))}
+              </select>
             </div>
-            <button type="submit" className="aqicn-button" disabled={loading}>
+            <button type="submit" className="button" disabled={loading}>
               {loading ? 'Loading...' : 'Get Data'}
             </button>
           </form>

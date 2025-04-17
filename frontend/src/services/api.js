@@ -17,6 +17,7 @@ export const aqicnApi = {
     getDataByDate: (date) => api.get(`/aqicn/date/${date}`),
     getLatestData: () => api.get('/aqicn/latest'),
     getMonthlyData: () => api.get('/aqicn/monthly'),
+    getAvailableDates: () => api.get('/aqicn/dates'),
 }
 
 export const sensorApi = {
@@ -25,6 +26,7 @@ export const sensorApi = {
     getDataByDate: (date) => api.get(`/sensor/date/${date}`),
     getLatestData: () => api.get('/sensor/latest'),
     getMonthlyData: () => api.get('/sensor/monthly'),
+    getAvailableDates: () => api.get('/sensor/dates'),
 }
 
 export const weatherApi = {
@@ -33,6 +35,7 @@ export const weatherApi = {
     getDataByDate: (date) => api.get(`/weather/date/${date}`),
     getLatestData: () => api.get('/weather/latest'),
     getMonthlyData: () => api.get('/weather/monthly'),
+    getAvailableDates: () => api.get('/weather/dates'),
 }
 
 function wait(ms) {

@@ -31,35 +31,44 @@ const WeatherPage = () => {
   const [monthlyData, setMonthlyData] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [dateData, setDateData] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAll = async () => {
       setLoading(true);
       try {
+        // 1. Fetch latest
         const latestRes = await weatherApi.getLatestData();
         setLatestData(latestRes.data);
-
+  
+        // 2. Fetch monthly
         const monthlyRes = await weatherApi.getMonthlyData();
         const monthly = monthlyRes.data.map(item => ({
           ...item,
           timestamp: new Date(item.ts).toLocaleString(),
         }));
         setMonthlyData(monthly);
-
+  
+        // 3. Fetch available dates
+        const datesRes = await weatherApi.getAvailableDates();
+        setAvailableDates(datesRes.data);
+  
+        // 4. Default select today's date (if available)
         const today = new Date().toISOString().split('T')[0];
-        setSelectedDate(today);
+        setSelectedDate(datesRes.data.includes(today) ? today : datesRes.data[0] || '');
       } catch (err) {
-        console.error("Weather fetch error:", err);
+        console.error("Weather data fetch error:", err);
         setError("Failed to load weather data.");
       } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
+  
+    fetchAll();
   }, []);
+  
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
@@ -96,13 +105,16 @@ const WeatherPage = () => {
           <form onSubmit={handleSubmit} className="date-form">
             <div className="form-group">
               <label htmlFor="date-picker">Select a date:</label>
-              <input
-                type="date"
+              <select
                 id="date-picker"
                 value={selectedDate}
                 onChange={handleDateChange}
                 className="date-input"
-              />
+              >
+                {availableDates.map(date => (
+                  <option key={date} value={date}>{date}</option>
+                ))}
+              </select>
             </div>
             <button type="submit" className="button" disabled={loading}>
               {loading ? 'Loading...' : 'Get Data'}
@@ -123,7 +135,47 @@ const WeatherPage = () => {
         )}
       </div>
 
-      <ThresholdLegend />
+      {/* Table: Weather Data for Selected Date */}
+      {dateData.length > 0 && (
+        <div className="card">
+          <h2 className="card-title">🗓️ Weather Data for {selectedDate}</h2>
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Temperature (°C)</th>
+                  <th>Humidity (%)</th>
+                  <th>Wind Speed (m/s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dateData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{new Date(item.ts).toLocaleTimeString()}</td>
+                    <td>{item.temperature}</td>
+                    <td>{item.humidity}</td>
+                    <td>{item.wind_speed}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {dateData.length === 0 && !loading && selectedDate && !error && (
+        <div className="aqicn-card">
+          <p className="aqicn-no-data">No data available for {selectedDate}.</p>
+        </div>
+      )}
+
+      {dateData.length === 0 && !loading && selectedDate && !error && (
+        <div className="card">
+          <p className="no-data">No data available for {selectedDate}.</p>
+        </div>
+      )}
+
+    <ThresholdLegend />
 
       {/* Chart 1: Temperature */}
       {monthlyData.length > 0 && (
