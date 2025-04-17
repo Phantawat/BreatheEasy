@@ -43,3 +43,16 @@ def get_sensor_data_by_date(date: str):
     sensor_data = [SensorData(**row) for row in result]
     
     return sensor_data
+
+def get_latest_sensor_data():
+    """
+    Fetch the latest Sensor data entry from the database.
+    """
+    query = "SELECT * FROM SensorData ORDER BY timestamp DESC LIMIT 1"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    latest_data = SensorData(**result[0])
+    return latest_data

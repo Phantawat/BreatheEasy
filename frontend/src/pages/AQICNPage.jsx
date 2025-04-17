@@ -17,7 +17,7 @@ const LatestAQICN = () => {
 
   if (error) return <p className="aqicn-error">{error}</p>;
   if (!data) return <p className="aqicn-loading">Loading...</p>;
-
+  
   return (
     <div className="aqicn-card">
       <h2 className="aqicn-title">🌫️ Latest Air Quality</h2>

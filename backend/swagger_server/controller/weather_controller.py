@@ -43,3 +43,16 @@ def get_weather_data_by_date(date: str):
     weather_data = [Weather(**row) for row in result]
     
     return weather_data
+
+def get_latest_weather_data():
+    """
+    Fetch the latest weather data entry from the database.
+    """
+    query = "SELECT * FROM project_weather ORDER BY ts DESC LIMIT 1"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    latest_data = Weather(**result[0])
+    return latest_data

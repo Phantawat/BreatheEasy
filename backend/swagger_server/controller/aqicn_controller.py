@@ -59,3 +59,16 @@ def get_aqicn_data_by_date_range(start_date: str, end_date: str):
     
     return aqicn_data
 
+def get_latest_aqicn_data():
+    """
+    Fetch the latest AQICN data entry from the database.
+    """
+    query = "SELECT * FROM project_aqicn ORDER BY ts DESC LIMIT 1"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    latest_data = AQICN(**result[0])
+    return latest_data
+
