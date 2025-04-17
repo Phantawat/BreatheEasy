@@ -1,0 +1,179 @@
+/* Shared.css - Reusable components across all dashboards */
+
+/* Wrapper and Page Title */
+.page-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-color, #333);
+  }
+  
+  .page-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #1e3a8a;
+  }
+  
+  /* Card Layout */
+  .card {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #2c7a7b;
+  }
+  
+  .details {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4b5563;
+  }
+  
+  .details p {
+    margin-bottom: 0.6rem;
+  }
+  
+  /* Form */
+  .date-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .date-input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9fafb;
+    transition: border-color 0.2s;
+  }
+  
+  .date-input:focus {
+    border-color: #38bdf8;
+    outline: none;
+  }
+  
+  .button {
+    padding: 0.6rem 1.2rem;
+    background-color: #38bdf8;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .button:hover {
+    background-color: #0ea5e9;
+  }
+  
+  .button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+  }
+  
+  /* Table */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.75rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .table th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #334155;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f9fafb;
+  }
+  
+  .no-data {
+    font-style: italic;
+    color: #64748b;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  /* Grid Layout */
+  .grid-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .grid-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .narrow {
+    width: 100%;
+  }
+  
+  .wide {
+    width: 100%;
+  }
+  
+  /* Chart Container */
+  .chart-container {
+    background: var(--card-bg, #fff);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* States */
+  .loading,
+  .error {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 2rem;
+  }
+  
+  .error {
+    color: #e53e3e;
+  }
+  

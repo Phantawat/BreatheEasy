@@ -24,6 +24,7 @@ export const sensorApi = {
     getDataById: (id) => api.get(`/sensor/${id}`),
     getDataByDate: (date) => api.get(`/sensor/date/${date}`),
     getLatestData: () => api.get('/sensor/latest'),
+    getMonthlyData: () => api.get('/sensor/monthly'),
 }
 
 export const weatherApi = {
@@ -37,20 +38,34 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 export async function fetchLatestReports() {
-    const aqiRes = await aqicnApi.getLatestData();
-    await wait(200); // wait 200ms before next request
-
-    const sensorRes = await sensorApi.getLatestData();
-    await wait(200); // wait 200ms before next request
-
-    const weatherRes = await weatherApi.getLatestData();
-
-    return {
-      aqi: aqiRes.data,
-      sensor: sensorRes.data,
-      weather: weatherRes.data
-    };
-}
+    let aqi = null, sensor = null, weather = null;
+  
+    try {
+      const res = await aqicnApi.getLatestData();
+      aqi = res.data;
+    } catch (e) {
+      console.error("AQI fetch failed", e);
+    }
+    await wait(200);
+  
+    try {
+      const res = await sensorApi.getLatestData();
+      sensor = res.data;
+    } catch (e) {
+      console.error("Sensor fetch failed", e);
+    }
+    await wait(200);
+  
+    try {
+      const res = await weatherApi.getLatestData();
+      weather = res.data;
+    } catch (e) {
+      console.error("Weather fetch failed", e);
+    }
+  
+    return { aqi, sensor, weather };
+  }
+  
 
 
 export default api;
