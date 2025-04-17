@@ -7,8 +7,8 @@ from .models.sensor_data import SensorData
 from .models.weather import Weather
 
 from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range, get_latest_aqicn_data
-from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date
-from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date
+from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date, get_latest_sensor_data
+from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date, get_latest_weather_data
 
 app = FastAPI(title="Air Quality Monitoring API")
 
@@ -60,7 +60,7 @@ def read_aqicn_data_by_id(aqicn_id: int):
         return aqicn_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 @app.get("/sensor", response_model=List[SensorData])
 def read_sensor_data():    
     """
@@ -72,6 +72,19 @@ def read_sensor_data():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/sensor/latest", response_model=SensorData)
+def read_latest_sensor_data():
+    """
+    Retrieve the latest Sensor data.
+    """
+    try: 
+        latest_data = get_latest_sensor_data()
+        if not latest_data:
+            raise HTTPException(status_code=404, detail="Latest Sensor data not found")
+        return latest_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @app.get("/sensor/{sensor_id}", response_model=SensorData)
 def read_sensor_data_by_id(sensor_id: int):
     """
@@ -95,7 +108,21 @@ def read_weather_data():
         return weather_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+
+@app.get("/weather/latest", response_model=Weather)
+def read_latest_weather_data():
+    """
+    Retrieve the latest Weather data.
+    """
+    try: 
+        latest_data = get_latest_weather_data()
+        if not latest_data:
+            raise HTTPException(status_code=404, detail="Latest Weather data not found")
+        return latest_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/weather/{weather_id}", response_model=Weather)
 def read_weather_data_by_id(weather_id: int):
     """
