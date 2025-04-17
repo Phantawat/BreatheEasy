@@ -8,6 +8,7 @@ import './styles/App.css'; // for minimal styling
 function App() {
   return (
     <Router>
+      <title>BreatheEasy</title>
       <div className="app-container">
         <Navbar />
         <main className="main-content">
