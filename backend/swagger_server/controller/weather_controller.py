@@ -56,3 +56,32 @@ def get_latest_weather_data():
 
     latest_data = Weather(**result[0])
     return latest_data
+
+def get_available_weather_dates():
+    """
+    Fetch unique available weather dates from the database (sorted).
+    Returns a list of date strings in 'YYYY-MM-DD' format.
+    """
+    query = "SELECT DISTINCT DATE(ts) as date FROM project_weather ORDER BY date DESC"
+    result = execute_query(query)
+
+    if not result:
+        return []
+
+    # Extract only the date strings
+    return [row["date"].strftime("%Y-%m-%d") for row in result]
+
+def get_monthly_weather_data():
+    """
+    Fetch monthly weather data from the database.
+    """
+    query = "SELECT * FROM project_weather WHERE DATE(ts) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    # Convert result to list of Weather models
+    monthly_data = [Weather(**row) for row in result]
+
+    return monthly_data

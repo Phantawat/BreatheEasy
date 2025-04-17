@@ -76,7 +76,7 @@ def get_monthly_aqicn_data():
     """
     Fetch monthly AQICN data from the database.
     """
-    query = "SELECT DATE(ts) AS date, AVG(aqi) AS avg_aqi FROM project_aqicn GROUP BY DATE(ts)"
+    query = "SELECT * FROM project_aqicn WHERE DATE(ts) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)"
     result = execute_query(query)
 
     if not result:
@@ -84,4 +84,17 @@ def get_monthly_aqicn_data():
 
     monthly_data = [AQICN(**row) for row in result]
     return monthly_data
+
+def get_available_aqicn_dates():
+    """
+    Fetch available AQICN dates from the database.
+    """
+    query = "SELECT DISTINCT DATE(ts) AS date FROM project_aqicn ORDER BY date DESC"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    dates = [row['date'] for row in result]
+    return dates
 

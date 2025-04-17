@@ -56,3 +56,34 @@ def get_latest_sensor_data():
 
     latest_data = SensorData(**result[0])
     return latest_data
+
+def get_monthly_sensor_data():
+    """
+    Fetch monthly sensor data from the database.
+    """
+    query = """
+        SELECT * FROM SensorData WHERE DATE(timestamp) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    """
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    # Convert result to list of SensorData models
+    monthly_data = [SensorData(**row) for row in result]
+
+    return monthly_data
+
+def get_available_sensor_dates():
+    """
+    Fetch available sensor dates from the database.
+    """
+    query = "SELECT DISTINCT DATE(timestamp) FROM SensorData ORDER BY date DESC"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    # Extract dates from the result
+    dates = [row[0] for row in result]
+    return dates

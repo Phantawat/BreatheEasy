@@ -22,7 +22,7 @@ from .controller.sensor_controller import (
     get_sensor_data_by_id, 
     get_sensor_data_by_date, 
     get_latest_sensor_data, 
-    get_monthly_seonsor_data, 
+    get_monthly_sensor_data, 
     get_available_sensor_dates
 )
 from .controller.weather_controller import (
@@ -153,7 +153,7 @@ def read_monthly_sensor_data():
     Retrieve monthly Sensor data.
     """
     try:
-        monthly_data = get_monthly_seonsor_data()
+        monthly_data = get_monthly_sensor_data()
         if not monthly_data:
             raise HTTPException(status_code=404, detail="Monthly Sensor data not found")
         return monthly_data
