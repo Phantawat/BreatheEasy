@@ -44,17 +44,15 @@ def get_sensor_data_by_date(date: str):
     
     return sensor_data
 
-def get_last_sensor_data():
+def get_latest_sensor_data():
     """
-    Fetch the last sensor data entry from the database.
+    Fetch the latest Sensor data entry from the database.
     """
-    query = "SELECT * FROM SensorData ORDER BY ts DESC LIMIT 1"
+    query = "SELECT * FROM SensorData ORDER BY timestamp DESC LIMIT 1"
     result = execute_query(query)
-    
+
     if not result:
         return None
-    
-    # Convert result to SensorData model
-    sensor_data = SensorData(**result[0])
-    
-    return sensor_data
+
+    latest_data = SensorData(**result[0])
+    return latest_data

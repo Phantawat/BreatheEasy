@@ -32,14 +32,23 @@ export const weatherApi = {
     getLatestData: () => api.get('/weather/latest'),
 }
 
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 export async function fetchLatestReports() {
-  const [aqi, sensor, weather] = await Promise.all([
-    fetch("/aqicn/latest").then(res => res.json()),
-    fetch("/sensor/latest").then(res => res.json()),
-    fetch("/weather/latest").then(res => res.json())
-  ]);
+    const aqiRes = await aqicnApi.getLatestData();
+    await wait(200); // wait 200ms before next request
 
-  return { aqi, sensor, weather };
+    const sensorRes = await sensorApi.getLatestData();
+    await wait(200); // wait 200ms before next request
+
+    const weatherRes = await weatherApi.getLatestData();
+
+    return {
+      aqi: aqiRes.data,
+      sensor: sensorRes.data,
+      weather: weatherRes.data
+    };
 }
 
 

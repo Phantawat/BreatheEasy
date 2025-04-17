@@ -12,21 +12,21 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-//   useEffect(() => {
-//     fetchLatestReports()
-//       .then(res => {
-//         setData(res);
-//         setLoading(false);
-//       })
-//       .catch(err => {
-//         console.error("Error fetching reports:", err);
-//         setError("Unable to fetch latest reports.");
-//         setLoading(false);
-//       });
-//   }, []);
-
-//   if (loading) return <div className="loading">Loading latest report...</div>;
-//   if (error) return <div className="error">Error: {error}</div>;
+  useEffect(() => {
+    fetchLatestReports()
+      .then(res => {
+        setData(res);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching reports:", err);
+        setError("Unable to fetch latest reports.");
+        setLoading(false);
+      });
+  }, []);
+  
+  if (loading) return <div className="loading">Loading latest report...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div className="dashboard-container">
@@ -37,7 +37,7 @@ function Dashboard() {
         <div className="report-cards">
           <div className="card aqi-card">
             <h3>AQI</h3>
-            <p><strong>AQI:</strong> {data.aqi?.aqicn_score}</p>
+            <p><strong>AQI:</strong> {data.aqi?.aqi_score}</p>
             <p><strong>PM2.5:</strong> {data.aqi?.pm25}</p>
           </div>
           <div className="card sensor-card">
