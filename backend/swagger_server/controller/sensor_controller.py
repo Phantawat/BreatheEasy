@@ -33,7 +33,7 @@ def get_sensor_data_by_date(date: str):
     """
     Fetch sensor data by date from the database.
     """
-    query = "SELECT * FROM SensorData WHERE DATE(ts) = %s"
+    query = "SELECT * FROM SensorData WHERE DATE(timestamp) = %s"
     result = execute_query(query, (date,))
     
     if not result:
@@ -78,12 +78,12 @@ def get_available_sensor_dates():
     """
     Fetch available sensor dates from the database.
     """
-    query = "SELECT DISTINCT DATE(timestamp) FROM SensorData ORDER BY date DESC"
+    query = "SELECT DISTINCT DATE(timestamp) as date FROM SensorData ORDER BY date DESC"
     result = execute_query(query)
 
     if not result:
         return None
 
     # Extract dates from the result
-    dates = [row[0] for row in result]
+    dates = [row['date'] for row in result]
     return dates
