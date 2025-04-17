@@ -46,7 +46,7 @@ export async function fetchLatestReports() {
     } catch (e) {
       console.error("AQI fetch failed", e);
     }
-    await wait(200);
+    await wait(20);
   
     try {
       const res = await sensorApi.getLatestData();
@@ -54,7 +54,7 @@ export async function fetchLatestReports() {
     } catch (e) {
       console.error("Sensor fetch failed", e);
     }
-    await wait(200);
+    await wait(20);
   
     try {
       const res = await weatherApi.getLatestData();
