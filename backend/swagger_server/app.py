@@ -6,9 +6,9 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
-from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range
-from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date
-from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date
+from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range, get_latest_aqicn_data
+from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date, get_latest_sensor_data
+from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date, get_latest_weather_data
 
 app = FastAPI(title="Air Quality Monitoring API")
 
@@ -115,7 +115,7 @@ def read_latest_weather_data():
     Retrieve the latest weather data.
     """
     try:
-        weather_data = get_last_weather_data()
+        weather_data = get_latest_weather_data()
         if not weather_data:
             raise HTTPException(status_code=404, detail="No weather data found")
         return weather_data
@@ -186,6 +186,4 @@ def read_weather_data_by_date(date: str):
         return weather_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
-
     
