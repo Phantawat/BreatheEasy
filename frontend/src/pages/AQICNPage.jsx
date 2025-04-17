@@ -158,19 +158,57 @@ const AQICNPage = () => {
       {error && <p className="aqicn-error">{error}</p>}
       {loading && <p className="aqicn-loading">Loading data...</p>}
 
-      {/* Monthly Line Chart */}
+      {/* Chart 1: PM2.5 */}
       {monthlyData.length > 0 && (
         <div className="aqicn-chart-container">
-          <h2 className="aqicn-title">📈 AQICN Trends This Month</h2>
-          <ResponsiveContainer width="100%" height={400}>
+          <h2 className="aqicn-title">📊 PM2.5 Trends</h2>
+          <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: -10, bottom: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="timestamp" minTickGap={20} />
+              <XAxis
+                dataKey="timestamp"
+                tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                minTickGap={40}
+              />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="pm25" stroke="#f97316" name="PM2.5" strokeWidth={2} />
-              <Line type="monotone" dataKey="pm10" stroke="#38bdf8" name="PM10" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="pm25"
+                stroke="#f97316"
+                name="PM2.5"
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* Chart 2: PM10 */}
+      {monthlyData.length > 0 && (
+        <div className="aqicn-chart-container">
+          <h2 className="aqicn-title">📊 PM10 Trends</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={monthlyData} margin={{ top: 10, right: 20, left: -10, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="timestamp"
+                tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                minTickGap={40}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="pm10"
+                stroke="#38bdf8"
+                name="PM10"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

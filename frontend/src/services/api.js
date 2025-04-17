@@ -32,6 +32,7 @@ export const weatherApi = {
     getDataById: (id) => api.get(`/weather/${id}`),
     getDataByDate: (date) => api.get(`/weather/date/${date}`),
     getLatestData: () => api.get('/weather/latest'),
+    getMonthlyData: () => api.get('/weather/monthly'),
 }
 
 function wait(ms) {
