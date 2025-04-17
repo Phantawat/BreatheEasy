@@ -6,9 +6,9 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
-from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range, get_latest_aqicn_data
-from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date, get_latest_sensor_data
-from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date, get_latest_weather_data
+from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range, get_latest_aqicn_data, get_monthly_aqicn_data, get_available_aqicn_dates
+from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date, get_latest_sensor_data, get_monthly_seonsor_data, get_available_sensor_dates
+from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date, get_latest_weather_data, get_monthly_weather_data, get_available_weather_dates
 
 app = FastAPI(title="Air Quality Monitoring API")
 
@@ -47,16 +47,29 @@ def read_latest_aqicn_data():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.get("/aqicn/monthly", response_model=List[AQICN])
+@app.get("/aqicn/monthly", response_model=List)
 def read_monthly_aqicn_data():
     """
     Retrieve monthly AQICN data.
     """
     try:
-        monthly_data = get_all_aqicn_data()
+        monthly_data = get_monthly_aqicn_data()
         if not monthly_data:
             raise HTTPException(status_code=404, detail="Monthly AQICN data not found")
         return monthly_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/aqicn/dates", response_model=List)
+def aqicn_dates():
+    """
+    Retrieve AQICN dates.
+    """
+    try:
+        aqicn_dates = get_available_aqicn_dates()
+        if not aqicn_dates:
+            raise HTTPException(status_code=404, detail="AQICN data not found")
+        return aqicn_dates
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -97,6 +110,32 @@ def read_latest_sensor_data():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@app.get("/sensor/dates", response_model=List)
+def sensor_dates():
+    """
+    Retrieve sensor dates.
+    """
+    try:
+        sensor_dates = get_available_sensor_dates()
+        if not sensor_dates:
+            raise HTTPException(status_code=404, detail="Sensor data not found")
+        return sensor_dates
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/sensor/monthly", response_model=List[SensorData])
+def read_monthly_sensor_data():
+    """
+    Retrieve monthly Sensor data.
+    """
+    try:
+        monthly_data = get_monthly_seonsor_data()
+        if not monthly_data:
+            raise HTTPException(status_code=404, detail="Monthly Sensor data not found")
+        return monthly_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @app.get("/sensor/{sensor_id}", response_model=SensorData)
 def read_sensor_data_by_id(sensor_id: int):
     """
@@ -133,6 +172,33 @@ def read_latest_weather_data():
         return weather_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/weather/monthly", response_model=List[Weather])
+def read_monthly_weather_data():
+    """
+    Retrieve monthly weather data.
+    """
+    try:
+        monthly_data = get_monthly_weather_data()
+        if not monthly_data:
+            raise HTTPException(status_code=404, detail="Monthly weather data not found")
+        return monthly_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/weather/dates", response_model=List)
+def weather_dates():
+    """
+    Retrieve weather dates.
+    """
+    try:
+        weather_dates = get_available_weather_dates()
+        if not weather_dates:
+            raise HTTPException(status_code=404, detail="Weather data not found")
+        return weather_dates
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
     
 @app.get("/weather/{weather_id}", response_model=Weather)
 def read_weather_data_by_id(weather_id: int):
