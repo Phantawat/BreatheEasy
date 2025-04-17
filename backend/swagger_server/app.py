@@ -46,8 +46,20 @@ def read_latest_aqicn_data():
         return latest_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/aqicn/monthly", response_model=List[AQICN])
+def read_monthly_aqicn_data():
+    """
+    Retrieve monthly AQICN data.
+    """
+    try:
+        monthly_data = get_all_aqicn_data()
+        if not monthly_data:
+            raise HTTPException(status_code=404, detail="Monthly AQICN data not found")
+        return monthly_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-        
 @app.get("/aqicn/{aqicn_id}", response_model=AQICN)
 def read_aqicn_data_by_id(aqicn_id: int):
     """

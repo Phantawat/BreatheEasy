@@ -72,3 +72,16 @@ def get_latest_aqicn_data():
     latest_data = AQICN(**result[0])
     return latest_data
 
+def get_monthly_aqicn_data():
+    """
+    Fetch monthly AQICN data from the database.
+    """
+    query = "SELECT DATE(ts) AS date, AVG(aqi) AS avg_aqi FROM project_aqicn GROUP BY DATE(ts)"
+    result = execute_query(query)
+
+    if not result:
+        return None
+
+    monthly_data = [AQICN(**row) for row in result]
+    return monthly_data
+
