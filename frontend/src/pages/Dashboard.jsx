@@ -56,7 +56,7 @@ function Dashboard() {
       <section className="links-section">
         <h2 className="section-title">🔍 Explore All Data</h2>
         <ul className="data-links">
-          <li><Link to="/aqi">🌬️ View All AQI Data</Link></li>
+          <li><Link to="/aqicn">🌬️ View All AQI Data</Link></li>
           <li><Link to="/sensor">📟 View All Sensor Data</Link></li>
           <li><Link to="/weather">🌦️ View All Weather Data</Link></li>
         </ul>

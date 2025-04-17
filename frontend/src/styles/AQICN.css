@@ -43,4 +43,66 @@
   .aqicn-error {
     color: #e53e3e;
   }
+
+  .aqicn-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-color, #333);
+  }
+  
+  .aqicn-page-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #1e3a8a;
+  }
+  
+  .aqicn-card {
+    background: var(--card-bg, #fff);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+  }
+  
+  .aqicn-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #334155;
+  }
+  
+  .aqicn-details p {
+    margin-bottom: 0.6rem;
+    color: #4b5563;
+  }
+  
+  .aqicn-chart-container {
+    background: var(--card-bg, #fff);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .aqicn-loading,
+  .aqicn-error {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #ef4444;
+  }
+  
+  .aqicn-date-selector {
+    text-align: right;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .aqicn-date-selector select {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-left: 0.5rem;
+  }
+  
   

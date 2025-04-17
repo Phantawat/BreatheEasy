@@ -16,6 +16,7 @@ export const aqicnApi = {
     getDataById: (id) => api.get(`/aqicn/${id}`),
     getDataByDate: (date) => api.get(`/aqicn/date/${date}`),
     getLatestData: () => api.get('/aqicn/latest'),
+    getMonthlyData: () => api.get('/aqicn/monthly'),
 }
 
 export const sensorApi = {
