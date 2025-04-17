@@ -8,31 +8,31 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
-<<<<<<< HEAD
-from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range, get_latest_aqicn_data, get_monthly_aqicn_data, get_available_aqicn_dates
-from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date, get_latest_sensor_data, get_monthly_seonsor_data, get_available_sensor_dates
-from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date, get_latest_weather_data, get_monthly_weather_data, get_available_weather_dates
-=======
 from .controller.aqicn_controller import (
-    get_all_aqicn_data,
-    get_aqicn_data_by_id,
-    get_aqicn_data_by_date,
-    get_aqicn_data_by_date_range,
-    get_latest_aqicn_data,
+    get_all_aqicn_data, 
+    get_aqicn_data_by_id, 
+    get_aqicn_data_by_date, 
+    get_aqicn_data_by_date_range, 
+    get_latest_aqicn_data, 
+    get_monthly_aqicn_data, 
+    get_available_aqicn_dates
 )
 from .controller.sensor_controller import (
-    get_all_sensor_data,
-    get_sensor_data_by_id,
-    get_sensor_data_by_date,
-    get_latest_sensor_data,
+    get_all_sensor_data, 
+    get_sensor_data_by_id, 
+    get_sensor_data_by_date, 
+    get_latest_sensor_data, 
+    get_monthly_seonsor_data, 
+    get_available_sensor_dates
 )
 from .controller.weather_controller import (
-    get_all_weather_data,
-    get_weather_data_by_id,
-    get_weather_data_by_date,
-    get_latest_weather_data,
+    get_all_weather_data, 
+    get_weather_data_by_id, 
+    get_weather_data_by_date, 
+    get_latest_weather_data, 
+    get_monthly_weather_data, 
+    get_available_weather_dates
 )
->>>>>>> 8d8b89d15e0d2e0875daa280597b7b37395dc2a7
 
 app = FastAPI(title="Air Quality Monitoring API")
 
@@ -72,14 +72,8 @@ def read_latest_aqicn_data():
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-<<<<<<< HEAD
     
 @app.get("/aqicn/monthly", response_model=List)
-=======
-
-
-@app.get("/aqicn/monthly", response_model=List[AQICN])
->>>>>>> 8d8b89d15e0d2e0875daa280597b7b37395dc2a7
 def read_monthly_aqicn_data():
     try:
         monthly_data = get_monthly_aqicn_data()
