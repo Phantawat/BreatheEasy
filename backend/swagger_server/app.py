@@ -6,7 +6,7 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
-from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range
+from .controller.aqicn_controller import get_all_aqicn_data, get_aqicn_data_by_id, get_aqicn_data_by_date, get_aqicn_data_by_date_range, get_latest_aqicn_data
 from .controller.sensor_controller import get_all_sensor_data, get_sensor_data_by_id, get_sensor_data_by_date
 from .controller.weather_controller import get_all_weather_data, get_weather_data_by_id, get_weather_data_by_date
 
@@ -33,7 +33,21 @@ def read_aqicn_data():
         return get_all_aqicn_data()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+@app.get("/aqicn/latest", response_model=AQICN)
+def read_latest_aqicn_data():
+    """
+    Retrieve the latest AQICN data.
+    """
+    try: 
+        latest_data = get_latest_aqicn_data()
+        if not latest_data:
+            raise HTTPException(status_code=404, detail="Latest AQICN data not found")
+        return latest_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+        
 @app.get("/aqicn/{aqicn_id}", response_model=AQICN)
 def read_aqicn_data_by_id(aqicn_id: int):
     """
@@ -146,3 +160,4 @@ def read_weather_data_by_date(date: str):
         return weather_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    

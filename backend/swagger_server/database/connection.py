@@ -18,7 +18,7 @@ db_config = {
 # Create connection pool
 connection_pool = pooling.MySQLConnectionPool(
     pool_name="air_quality_pool",
-    pool_size=5,
+    pool_size=1,
     **db_config
 )
 
