@@ -42,31 +42,40 @@ const AQICNPage = () => {
       try {
         const latestRes = await aqicnApi.getLatestData();
         setLatestData(latestRes.data);
-
+  
         const monthlyRes = await aqicnApi.getMonthlyData();
         const monthly = monthlyRes.data.map(item => ({
           ...item,
           timestamp: new Date(item.ts).toLocaleString(),
         }));
         setMonthlyData(monthly);
-
-        // 3. Fetch available dates
+  
+        // Fetch available dates
         const datesRes = await aqicnApi.getAvailableDates();
-        setAvailableDates(datesRes.data);
-
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
-        setSelectedDate(formattedDate);
+        const dates = datesRes.data;
+        setAvailableDates(dates);
+  
+        // Pick a default date (latest available or today)
+        const today = new Date().toISOString().split("T")[0];
+        const defaultDate = dates.includes(today) ? today : dates[0];
+        setSelectedDate(defaultDate);
+  
+        // ✅ Immediately fetch that date's data
+        const response = await aqicnApi.getDataByDate(defaultDate);
+        setDateData(response.data);
+        setError('');
       } catch (err) {
         console.error("AQICN fetch error:", err);
         setError("Failed to load AQICN data.");
+        setDateData([]);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
