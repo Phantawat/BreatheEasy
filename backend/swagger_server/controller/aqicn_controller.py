@@ -1,7 +1,9 @@
-from ..database.connection import execute_query
+from ..database.connection import execute_query, timed_cache
 from ..models.aqicn import AQICN
 
 
+
+@timed_cache(ttl=15)
 def get_all_aqicn_data():
     """
     Fetch all AQICN data from the database.
@@ -14,6 +16,7 @@ def get_all_aqicn_data():
     
     return aqicn_data
 
+@timed_cache(ttl=15)
 def get_aqicn_data_by_id(aqicn_id: int):
     """
     Fetch AQICN data by ID from the database.
@@ -29,6 +32,7 @@ def get_aqicn_data_by_id(aqicn_id: int):
     
     return aqicn_data
 
+@timed_cache(ttl=15)
 def get_aqicn_data_by_date(date: str):
     """
     Fetch AQICN data by date from the database.
@@ -44,6 +48,7 @@ def get_aqicn_data_by_date(date: str):
     
     return aqicn_data
 
+@timed_cache(ttl=15)
 def get_aqicn_data_by_date_range(start_date: str, end_date: str):
     """
     Fetch AQICN data by date range from the database.
@@ -59,6 +64,7 @@ def get_aqicn_data_by_date_range(start_date: str, end_date: str):
     
     return aqicn_data
 
+@timed_cache(ttl=15)
 def get_latest_aqicn_data():
     """
     Fetch the latest AQICN data entry from the database.
@@ -72,6 +78,7 @@ def get_latest_aqicn_data():
     latest_data = AQICN(**result[0])
     return latest_data
 
+@timed_cache(ttl=15)
 def get_monthly_aqicn_data():
     """
     Fetch monthly AQICN data from the database.
@@ -85,6 +92,7 @@ def get_monthly_aqicn_data():
     monthly_data = [AQICN(**row) for row in result]
     return monthly_data
 
+@timed_cache(ttl=15)
 def get_available_aqicn_dates():
     """
     Fetch available AQICN dates from the database.

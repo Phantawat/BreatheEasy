@@ -8,6 +8,9 @@ from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
 
+from ml.arima_model import forecast_pm25
+from ml.var_model import forecast_indoor_pm25
+
 from .controller.aqicn_controller import (
     get_all_aqicn_data, 
     get_aqicn_data_by_id, 
@@ -297,3 +300,23 @@ def read_weather_data_by_date(date: str):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/predict/pm25/arima")
+def predict_pm25_arima(hours: int = 6):
+    prediction = forecast_pm25(hours=hours)
+    return {
+        "model": "ARIMA",
+        "predicted_pm25": prediction,
+        "hours_ahead": hours
+    }
+
+
+@app.get("/predict/pm25/var")
+def predict_pm25_var(hours: int = 6):
+    prediction = forecast_indoor_pm25(hours=hours)
+    return {
+        "model": "VAR",
+        "predictions": prediction,
+        "hours_ahead": hours
+    }

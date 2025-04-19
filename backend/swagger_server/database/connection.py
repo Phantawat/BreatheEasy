@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import pooling
 import os
 from dotenv import load_dotenv
+import time
 
 # Load environment variables
 load_dotenv()
@@ -23,7 +24,7 @@ def _init_pool():
     if _connection_pool is None:
         _connection_pool = pooling.MySQLConnectionPool(
             pool_name="air_quality_pool",
-            pool_size=2,
+            pool_size=1,
             **db_config
         )
     return _connection_pool
@@ -51,3 +52,26 @@ def execute_query(query, params=None, fetch=True):
     finally:
         cursor.close()
         connection.close()
+
+
+
+
+# Custom timed cache
+_cache = {}
+def timed_cache(ttl=10):
+    def decorator(func):
+        def wrapper(*args):
+            key = (func.__name__, args)
+            now = time.time()
+            # If cache exists and is fresh
+            if key in _cache:
+                result, timestamp = _cache[key]
+                if now - timestamp < ttl:
+                    return result
+            # Otherwise fetch and cache
+            result = func(*args)
+            _cache[key] = (result, now)
+            return result
+        return wrapper
+    return decorator
+

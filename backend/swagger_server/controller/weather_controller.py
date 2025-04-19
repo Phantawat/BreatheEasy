@@ -1,7 +1,7 @@
-from ..database.connection import execute_query
+from ..database.connection import execute_query, timed_cache
 from ..models.weather import Weather
 
-
+@timed_cache(ttl=15)
 def get_all_weather_data():
     """
     Fetch all weather data from the database.
@@ -14,6 +14,7 @@ def get_all_weather_data():
     
     return weather_data
 
+@timed_cache(ttl=15)
 def get_weather_data_by_id(weather_id: int):
     """
     Fetch weather data by ID from the database.
@@ -29,6 +30,7 @@ def get_weather_data_by_id(weather_id: int):
     
     return weather_data
 
+@timed_cache(ttl=15)
 def get_weather_data_by_date(date: str):
     """
     Fetch weather data by date from the database.
@@ -44,6 +46,7 @@ def get_weather_data_by_date(date: str):
     
     return weather_data
 
+@timed_cache(ttl=15)
 def get_latest_weather_data():
     """
     Fetch the latest weather data entry from the database.
@@ -57,6 +60,7 @@ def get_latest_weather_data():
     latest_data = Weather(**result[0])
     return latest_data
 
+@timed_cache(ttl=15)
 def get_available_weather_dates():
     """
     Fetch unique available weather dates from the database (sorted).
@@ -71,6 +75,7 @@ def get_available_weather_dates():
     # Extract only the date strings
     return [row["date"].strftime("%Y-%m-%d") for row in result]
 
+@timed_cache(ttl=15)
 def get_monthly_weather_data():
     """
     Fetch monthly weather data from the database.

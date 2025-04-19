@@ -6,3 +6,4 @@ pydantic
 sqlalchemy
 mysql
 selenium
+statsmodels

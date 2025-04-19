@@ -1,7 +1,7 @@
-from ..database.connection import execute_query
+from ..database.connection import execute_query, timed_cache
 from ..models.sensor_data import SensorData
 
-
+@timed_cache(ttl=15)
 def get_all_sensor_data():
     """
     Fetch all sensor data from the database.
@@ -14,6 +14,7 @@ def get_all_sensor_data():
     
     return sensor_data
 
+@timed_cache(ttl=15)
 def get_sensor_data_by_id(sensor_id: int):
     """
     Fetch sensor data by ID from the database.
@@ -29,6 +30,7 @@ def get_sensor_data_by_id(sensor_id: int):
     
     return sensor_data
 
+@timed_cache(ttl=15)
 def get_sensor_data_by_date(date: str):
     """
     Fetch sensor data by date from the database.
@@ -44,6 +46,7 @@ def get_sensor_data_by_date(date: str):
     
     return sensor_data
 
+@timed_cache(ttl=15)
 def get_latest_sensor_data():
     """
     Fetch the latest Sensor data entry from the database.
@@ -57,6 +60,7 @@ def get_latest_sensor_data():
     latest_data = SensorData(**result[0])
     return latest_data
 
+@timed_cache(ttl=15)
 def get_monthly_sensor_data():
     """
     Fetch monthly sensor data from the database.
@@ -74,6 +78,7 @@ def get_monthly_sensor_data():
 
     return monthly_data
 
+@timed_cache(ttl=15)
 def get_available_sensor_dates():
     """
     Fetch available sensor dates from the database.

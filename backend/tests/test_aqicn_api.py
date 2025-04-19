@@ -25,7 +25,6 @@ class TestAQICNAPI(unittest.TestCase):
 
     def test_API_005_date_empty_result(self):
         res = client.get("/aqicn/date/2025-01-01")
-        # This expects 404 from backend if no data found
         self.assertIn(res.status_code, (200, 404))
 
     def test_API_006_get_by_id(self):
