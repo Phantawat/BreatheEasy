@@ -14,6 +14,7 @@ class SensorData(BaseModel):
     pm10: int
     latitude: float
     longitude: float
+    room_id: int
 
     class Config:
         orm_mode = True  # Enable ORM mode for compatibility with SQLAlchemy models
