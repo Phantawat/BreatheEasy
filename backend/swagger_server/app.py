@@ -1,12 +1,16 @@
 # backend/swagger_server/main.py
 
 from typing import List
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
+
+from ml.xgb_indoor_forecast import forecast_full, forecast_basic
+from ml.xgb_outdoor_forecast import forecast_outdoor
+
 
 from .controller.aqicn_controller import (
     get_all_aqicn_data, 
@@ -297,3 +301,36 @@ def read_weather_data_by_date(date: str):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/predict/indoor")
+def predict_indoor(
+    model: str = Query("full", enum=["basic", "full"]),
+    hours: int = Query(6, ge=1, le=24)
+):
+    """
+    Predict indoor data for the next `hours` (default 6).
+    - model=basic: uses only indoor sensor data
+    - model=full: uses indoor + outdoor data
+    - hours: forecast horizon (6, 12, or 24)
+    """
+    if model == "basic":
+        forecast_df = forecast_basic(hours)
+    elif model == "full":
+        forecast_df = forecast_full(hours)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid model type")
+    
+    return {
+        "model": model,
+        "hours": hours,
+        "forecast": forecast_df.to_dict(orient="records")
+    }
+
+@app.get("/predict/outdoor")
+def predict_outdoor(hours: int = Query(6, ge=1, le=24)):
+    """
+    Predict outdoor temperature, humidity, PM2.5, and PM10.
+    Supports forecast lengths of 6, 12, or 24 hours.
+    """
+    forecast_df = forecast_outdoor(hours)
+    return {"forecast": forecast_df.to_dict(orient="records")}

@@ -22,7 +22,7 @@ class TestDashboardAPI(unittest.TestCase):
             "id": 1, "ts": SAMPLE_TS, "pm25": 10.0, "pm10": 20.0, "aqi_score": 50
         }
         mock_s.return_value = {
-            "id": 2, "timestamp": SAMPLE_TS, "temperature": 22.5,
+            "id": 2, "ts": SAMPLE_TS, "temperature": 22.5,
             "humidity": 55.0, "pm25": 5, "pm10": 10, "latitude": 0, "longitude": 0
         }
         mock_w.return_value = {

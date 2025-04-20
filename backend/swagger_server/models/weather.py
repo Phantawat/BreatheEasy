@@ -12,5 +12,5 @@ class Weather(BaseModel):
     humidity: float
     wind_speed: float
     
-    class config:
+    class Config:
         orm_mode = True

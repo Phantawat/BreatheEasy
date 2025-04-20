@@ -7,7 +7,7 @@ class SensorData(BaseModel):
     SensorData is a model representing the data from a sensor.
     """
     id: int
-    timestamp: datetime
+    ts: datetime
     temperature: float
     humidity: float
     pm25: int
