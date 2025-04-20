@@ -7,3 +7,5 @@ sqlalchemy
 mysql
 selenium
 statsmodels
+xgboost 
+scikit-learn

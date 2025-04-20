@@ -1,7 +1,6 @@
 import pandas as pd
 from swagger_server.database.connection import execute_query
 
-
 def load_combined_indoor_outdoor():
     """
     Load merged indoor + outdoor dataset for multivariate prediction.
@@ -42,15 +41,37 @@ def load_combined_indoor_outdoor():
 
     return df
 
-def load_outdoor_environment_data():
+import pandas as pd
+from swagger_server.database.connection import execute_query
+
+def load_outdoor_data():
     """
-    Load outdoor environmental data: pm25, pm10, temperature, humidity
+    Load outdoor environment data.
+
+    This function loads the outdoor environment data from the database. It
+    fetches the following columns:
+
+    - ts (datetime): Timestamp
+    - pm25 (float): PM2.5
+    - pm10 (float): PM10
+    - wind_speed (float): Wind speed
+    - temperature (float): Temperature
+    - humidity (float): Humidity
+
+    The data is resampled to an hourly frequency and any gaps are filled
+    using linear interpolation.
+
+    Returns
+    -------
+    pd.DataFrame
     """
+
     query = """
         SELECT 
             a.ts AS ts,
             a.pm25 AS pm25,
             a.pm10 AS pm10,
+            w.wind_speed AS wind_speed,
             w.temperature AS temperature,
             w.humidity AS humidity
         FROM 
@@ -58,17 +79,16 @@ def load_outdoor_environment_data():
         JOIN 
             project_weather w ON DATE(a.ts) = DATE(w.ts)
         WHERE 
-            a.pm25 IS NOT NULL AND a.pm10 IS NOT NULL 
-            AND w.temperature IS NOT NULL AND w.humidity IS NOT NULL
-        ORDER BY 
-            a.ts ASC
+            a.pm25 IS NOT NULL AND a.pm10 IS NOT NULL AND
+            w.wind_speed IS NOT NULL AND w.temperature IS NOT NULL AND w.humidity IS NOT NULL
+        ORDER BY a.ts ASC
     """
     result = execute_query(query)
     df = pd.DataFrame(result)
 
     df['ts'] = pd.to_datetime(df['ts'])
     df.set_index('ts', inplace=True)
-    df['hour'] = df.index.hour
-
+    # Resample to hourly frequency and interpolate
     df = df.resample("1h").mean().interpolate()
+
     return df

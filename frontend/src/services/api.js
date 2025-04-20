@@ -39,7 +39,11 @@ export const weatherApi = {
 }
 
 export const forecastApi = {
-  getOutdoorForecast: () => api.get('/predict/outdoor'),
+  getIndoorForecast: (model, hours) =>
+    api.get(`/predict/indoor?model=${model}&hours=${hours}`),
+
+  getOutdoorForecast: (hours) =>
+    api.get(`/predict/outdoor?hours=${hours}`),
 };
 
 function wait(ms) {
