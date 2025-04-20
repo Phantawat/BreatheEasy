@@ -45,7 +45,7 @@ const SensorPage = () => {
         const monthlyRes = await sensorApi.getMonthlyData();
         const monthly = monthlyRes.data.map(item => ({
           ...item,
-          timestamp: new Date(item.timestamp).toLocaleString(),
+          timestamp: new Date(item.ts).toLocaleString(),
         }));
         setMonthlyData(monthly);
 
@@ -121,7 +121,7 @@ const SensorPage = () => {
           <div className="card wide">
             <h2 className="card-title">🔍 Latest Sensor Reading</h2>
             <div className="details">
-              <p><strong>📅 Timestamp:</strong><br /> {new Date(latestData.timestamp).toLocaleString()}</p>
+              <p><strong>📅 Timestamp:</strong><br /> {new Date(latestData.ts).toLocaleString()}</p>
               <p><strong>🌡️ Temperature:</strong> {latestData.temperature} °C</p>
               <p><strong>💧 Humidity:</strong> {latestData.humidity} %</p>
               <p><strong>🌬️ PM2.5:</strong> {latestData.pm25}</p>
@@ -154,7 +154,7 @@ const SensorPage = () => {
               <tbody>
                 {dateData.map((item, index) => (
                   <tr key={index}>
-                    <td>{new Date(item.timestamp).toLocaleTimeString()}</td>
+                    <td>{new Date(item.ts).toLocaleTimeString()}</td>
                     <td>{item.temperature}</td>
                     <td>{item.humidity}</td>
                     <td>{item.pm25}</td>

@@ -38,6 +38,10 @@ export const weatherApi = {
     getAvailableDates: () => api.get('/weather/dates'),
 }
 
+export const forecastApi = {
+  getOutdoorForecast: () => api.get('/predict/outdoor'),
+};
+
 function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

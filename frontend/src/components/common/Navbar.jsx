@@ -10,7 +10,7 @@ const Navbar = () => {
     { path: "/aqicn", label: "AQICN", icon: "🌫️" },
     { path: "/sensor", label: "Sensor", icon: "📟" },
     { path: "/weather", label: "Weather", icon: "🌦️" },
-    { path: "/prediction", label: "Prediction", icon: "🔮" },
+    { path: "/forecast", label: "Forecast", icon: "🔮" },
   ];
 
   return (

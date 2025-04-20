@@ -4,6 +4,7 @@ import AQICNPage from "./pages/AQICNPage";
 import Dashboard from "./pages/Dashboard";
 import SensorPage from "./pages/SensorPage";
 import WeatherPage from "./pages/WeatherPage";
+import ForecastPage from "./pages/ForecastPage";
 // import other pages...
 
 function AppRoutes() {
@@ -13,6 +14,7 @@ function AppRoutes() {
       <Route path="/aqicn" element={<AQICNPage />} />
       <Route path="/sensor" element={<SensorPage />} />
       <Route path="/weather" element={<WeatherPage />} />
+      <Route path="/forecast" element={<ForecastPage/>} />
     </Routes>
   );
 }
