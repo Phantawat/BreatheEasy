@@ -44,31 +44,38 @@ const ToggleSwitch = ({ label, checked, onChange, disabled }) => (
 
 const ForecastPage = () => {
   const [forecastData, setForecastData] = useState([]);
-  const [selectedModel, setSelectedModel] = useState('basic');
+  const [selectedModel, setSelectedModel] = useState('no_ac');
   const [targets, setTargets] = useState({ indoor: true, outdoor: false });
   const [hours, setHours] = useState(6);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const flattenForecast = (forecastMap) => {
+    return Object.entries(forecastMap).map(([time, values]) => ({
+      ...values,
+      time,
+      timestamp: new Date(time).toLocaleString()
+    }));
+  };
+  
   const fetchForecast = async () => {
     setLoading(true);
     setForecastData([]);
     setError('');
     try {
       let allData = [];
+  
       if (targets.indoor) {
         const res = await forecastApi.getIndoorForecast(selectedModel, hours);
-        allData = allData.concat(res.data.forecast);
+        allData = allData.concat(flattenForecast(res.data.forecast));
       }
+  
       if (targets.outdoor) {
         const res = await forecastApi.getOutdoorForecast(hours);
-        allData = allData.concat(res.data.forecast);
+        allData = allData.concat(flattenForecast(res.data.forecast));
       }
-      const formatted = allData.map(item => ({
-        ...item,
-        timestamp: new Date(item.time).toLocaleString(),
-      }));
-      setForecastData(formatted);
+  
+      setForecastData(allData);
     } catch (err) {
       console.error(err);
       setError('Failed to fetch forecast data.');
@@ -129,16 +136,16 @@ const ForecastPage = () => {
           <div className="form-group">
             <label className="highlighted-label" htmlFor="model-select">Prediction Model:</label>
             <div className="select-wrapper">
-              <select
-                id="model-select"
-                className="date-input fancy-select"
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                disabled={loading}
-              >
-                <option value="basic">Basic (Indoor only)</option>
-                <option value="full">Full (Indoor + Outdoor)</option>
-              </select>
+            <select
+              id="model-select"
+              className="date-input fancy-select"
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              disabled={loading}
+            >
+              <option value="no_ac">Sealed Room (No AC)</option>
+              <option value="with_ac">Room with AC</option>
+            </select>
               <span className="select-icon">⌄</span>
             </div>
           </div>

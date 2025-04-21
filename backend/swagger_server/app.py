@@ -9,13 +9,10 @@ import pandas as pd
 from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
-from utils.data_loader import load_latest_lagged_features, load_latest_outdoor_lagged
+from utils.data_loader import load_latest_features, predict
 
 from ml.xgb_indoor_forecast import forecast_full, forecast_basic
 from ml.xgb_outdoor_forecast import forecast_outdoor
-from ml.train_indoor_model import train_and_save_model
-from ml.train_indoor_full_model import train_and_save_full_model
-from ml.train_outdoor_model_with_time import train_and_save_outdoor_model
 
 
 
@@ -310,36 +307,42 @@ def read_weather_data_by_date(date: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/predict/indoor")
-def predict_indoor(
-    model: str = Query("full", enum=["basic", "full"]),
-    hours: int = Query(6, ge=1, le=24)
-):
-    """
-    Predict indoor data for the next `hours` (default 6).
-    - model=basic: uses only indoor sensor data
-    - model=full: uses indoor + outdoor data
-    - hours: forecast horizon (6, 12, or 24)
-    """
-    if model == "basic":
-        forecast_df = forecast_basic(hours)
-    elif model == "full":
-        forecast_df = forecast_full(hours)
-    else:
-        raise HTTPException(status_code=400, detail="Invalid model type")
-    
-    return {
-        "model": model,
-        "hours": hours,
-        "forecast": forecast_df.to_dict(orient="records")
+
+MODEL_CONFIG = {
+    "indoor": {
+        "no_ac": {
+            "model": "ml/models/lstm_indoor_no_ac_model.keras",
+            "scaler": "ml/models/lstm_indoor_no_ac_scaler.pkl"
+        },
+        "with_ac": {
+            "model": "ml/models/lstm_indoor_with_ac_model.keras",
+            "scaler": "ml/models/lstm_indoor_with_ac_scaler.pkl"
+        }
+    },
+    "outdoor": {
+        "model": "ml/models/lstm_outdoor_model.keras",
+        "scaler": "ml/models/lstm_outdoor_scaler.pkl"
     }
+}
+
+TARGET_COLS = {
+    "indoor": ['temp_in', 'hum_in', 'pm25_in', 'pm10_in'],
+    "outdoor": ['temperature', 'humidity', 'pm25', 'pm10']
+}
+
+
+@app.get("/predict/indoor")
+def predict_indoor(model_type: str = Query(..., enum=["no_ac", "with_ac"]),
+                   hours: int = Query(12, enum=[6, 12, 24])):
+    config = MODEL_CONFIG["indoor"][model_type]
+    df = load_latest_features(mode="indoor")  # 🚫 no room_id filter
+    forecast_df = predict(config["model"], config["scaler"], df, TARGET_COLS["indoor"], forecast_hours=hours)
+    return {"forecast": forecast_df.to_dict(orient="index")}
+
 
 @app.get("/predict/outdoor")
-def predict_outdoor(hours: int = Query(6, ge=1, le=24)):
-    """
-    Predict outdoor temperature, humidity, PM2.5, and PM10.
-    Supports forecast lengths of 6, 12, or 24 hours.
-    """
-    forecast_df = forecast_outdoor(hours)
-    return {"forecast": forecast_df.to_dict(orient="records")}
-
+def predict_outdoor(hours: int = Query(12, enum=[6, 12, 24])):
+    config = MODEL_CONFIG["outdoor"]
+    df = load_latest_features(mode="outdoor")
+    forecast_df = predict(config["model"], config["scaler"], df, TARGET_COLS["outdoor"], forecast_hours=hours)
+    return {"forecast": forecast_df.to_dict(orient="index")}
