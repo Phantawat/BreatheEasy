@@ -75,9 +75,9 @@ npm run dev
 
 ## 🧪 Testing
 
-- API Load Testing: JMeter test plans included (`/tests/jmeter`)
-- E2E UI Testing: Cypress tests (`/frontend/cypress`)
+- API Load Testing: JMeter 
 - Unit Testing: FastAPI routes tested with `unittest` in `/backend/tests`
+- UI Testing: `/frontend/tests`
 
 ---
 
