@@ -40,10 +40,17 @@ export const weatherApi = {
 
 export const forecastApi = {
   getIndoorForecast: (model, hours) =>
-    api.get(`/predict/indoor?model=${model}&hours=${hours}`),
+    api.get(`/predict/indoor`, {
+      params: {
+        model_type: model,  
+        hours,
+      },
+    }),
 
   getOutdoorForecast: (hours) =>
-    api.get(`/predict/outdoor?hours=${hours}`),
+    api.get(`/predict/outdoor`, {
+      params: { hours },
+    }),
 };
 
 function wait(ms) {
