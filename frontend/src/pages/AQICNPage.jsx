@@ -14,7 +14,7 @@ import {
 import '../styles/Shared.css';
 
 const ThresholdLegend = () => (
-  <div className="card fade-in vibrant-border">
+  <div className="card">
     <h2 className="card-title">📘 PM2.5 Threshold Legend</h2>
     <ul className="legend-list">
       <li><strong className="green">Green</strong> — Good (0.0 – 12.0)</li>
@@ -177,7 +177,7 @@ const AQICNPage = () => {
 
       {/* PM2.5 Chart */}
       {monthlyData.length > 0 && (
-        <div className="chart-container fade-in vibrant-border">
+        <div className="chart-container fade-in">
           <h2 className="card-title">📊 PM2.5 Trends</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData}>
@@ -200,7 +200,7 @@ const AQICNPage = () => {
 
       {/* PM10 Chart */}
       {monthlyData.length > 0 && (
-        <div className="chart-container fade-in vibrant-border">
+        <div className="chart-container fade-in">
           <h2 className="card-title">📊 PM10 Trends</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData}>

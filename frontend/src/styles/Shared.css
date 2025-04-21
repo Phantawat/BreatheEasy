@@ -445,3 +445,8 @@ input:checked + .toggle-slider:before {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+.chart-container {
+  margin-top: 2rem;
+}
+

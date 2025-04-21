@@ -14,7 +14,7 @@ import {
 import '../styles/Shared.css';
 
 const ThresholdLegend = () => (
-  <div className="card legend vibrant-border gradient-bg">
+  <div className="card legend gradient-bg">
     <h2 className="card-title gradient-text">📘 Threshold Key</h2>
     <ul className="legend-list">
       <li><strong className="green">Green</strong> — Good / Optimal levels</li>
@@ -212,7 +212,7 @@ const ForecastPage = () => {
             ]
           }].map(({ title, dataKeys, colorScheme, areas }) =>
             forecastData.some(d => dataKeys.some(key => d[key] !== undefined)) && (
-              <div className="chart-container fade-in shadow-md vibrant-border" key={title}>
+              <div className="chart-container fade-in shadow-md" key={title}>
                 <h2 className="card-title subtle-title gradient-text">{title}</h2>
                 <ResponsiveContainer width="100%" height={250}>
                   <LineChart data={forecastData}>
