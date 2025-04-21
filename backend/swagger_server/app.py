@@ -3,13 +3,21 @@
 from typing import List
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+import joblib
+import pandas as pd
 
 from .models.aqicn import AQICN
 from .models.sensor_data import SensorData
 from .models.weather import Weather
+from utils.data_loader import load_latest_lagged_features, load_latest_outdoor_lagged
 
 from ml.xgb_indoor_forecast import forecast_full, forecast_basic
 from ml.xgb_outdoor_forecast import forecast_outdoor
+from ml.train_indoor_model import train_and_save_model
+from ml.train_indoor_full_model import train_and_save_full_model
+from ml.train_outdoor_model_with_time import train_and_save_outdoor_model
+
+
 
 
 from .controller.aqicn_controller import (
@@ -334,3 +342,135 @@ def predict_outdoor(hours: int = Query(6, ge=1, le=24)):
     """
     forecast_df = forecast_outdoor(hours)
     return {"forecast": forecast_df.to_dict(orient="records")}
+
+@app.get("/train/indoor")
+def train_indoor():
+    """
+    Train indoor model.
+    """
+    train_and_save_model()
+    return {"message": "Indoor model trained successfully."}
+
+
+@app.get("/train/indoorfull")
+def train_indoor_full():
+    train_and_save_full_model()
+    return {"message": "Indoor full model trained successfully."}
+
+
+
+@app.get("/train/outdoor")
+def train_outdoor():
+    train_and_save_outdoor_model()
+    return {"message": "Outdoor full model trained successfully."}
+
+
+@app.post("/predict/outdoor")
+def predict(payload: dict, hours: int = Query(6, ge=1, le=24)):
+
+    """
+    Predict outdoor temperature, humidity, PM2.5, and PM10.
+    Supports forecast lengths of 6, 12, or 24 hours.
+    Requires a POST request with the following JSON payload:
+    {
+        "temperature": float,
+        "humidity": float,
+        "pm25": float,
+        "pm10": float
+    }
+    Returns a JSON object with a list of forecasted values for each hour in the specified range.
+    Each forecasted value is a dictionary with the following keys:
+    {
+        "temperature": float,
+        "humidity": float,
+        "pm25": float,
+        "pm10": float
+    }
+    """
+
+    input_df = pd.DataFrame([payload])
+    results = []
+    for _ in range(hours):
+        pred = model.predict(input_df)[0]
+        results.append({
+            "temperature": pred[0],
+            "humidity": pred[1],
+            "pm25": pred[2],
+            "pm10": pred[3]
+        })
+        # Update lag values
+        for i, col in enumerate(["temperature", "humidity", "pm25", "pm10"]):
+            for lag in range(6, 1, -1):
+                input_df[f"{col}_lag{lag}"] = input_df[f"{col}_lag{lag-1}"]
+            input_df[f"{col}_lag1"] = pred[i]
+    return {"forecast": results}
+
+
+@app.get("/predict/indoor/full")
+def predict_indoor_full(hours: int = Query(6, ge=1, le=24)):
+    try:
+        MODEL_PATH = "ml/lgbm_forecast_indoor_full_with_ac.joblib"
+        model = joblib.load(MODEL_PATH)
+        df = load_latest_lagged_features()
+        if len(df) < 6:
+            raise HTTPException(status_code=400, detail="Not enough data to build lag features.")
+
+        current_input = {}
+        for lag in range(1, 7):
+            for col in df.columns:
+                current_input[f"{col}_lag{lag}"] = df.iloc[-lag][col]
+
+        current_input = pd.DataFrame([current_input])
+        predictions = []
+
+        for _ in range(hours):
+            pred = model.predict(current_input)[0]
+            predictions.append({
+                "temp_in": pred[0],
+                "hum_in": pred[1],
+                "pm25_in": pred[2],
+                "pm10_in": pred[3]
+            })
+
+            for i, col in enumerate(["temp_in", "hum_in", "pm25_in", "pm10_in"]):
+                for lag in range(6, 1, -1):
+                    current_input[f"{col}_lag{lag}"] = current_input[f"{col}_lag{lag-1}"]
+                current_input[f"{col}_lag1"] = pred[i]
+
+        return {"forecast": predictions}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/predict/outdoor/auto")
+def predict_outdoor(hours: int = Query(6, ge=1, le=24)):
+    try:
+        MODEL_PATH = "ml/lgbm_forecast_outdoor.joblib"
+        model = joblib.load(MODEL_PATH)
+        df = load_latest_outdoor_lagged()
+        current_input = {}
+        for lag in range(1, 7):
+            for col in df.columns:
+                current_input[f"{col}_lag{lag}"] = df.iloc[-lag][col]
+
+        current_input = pd.DataFrame([current_input])
+        predictions = []
+
+        for _ in range(hours):
+            pred = model.predict(current_input)[0]
+            predictions.append({
+                "temperature": pred[0],
+                "humidity": pred[1],
+                "pm25": pred[2],
+                "pm10": pred[3]
+            })
+
+            for i, col in enumerate(["temperature", "humidity", "pm25", "pm10"]):
+                for lag in range(6, 1, -1):
+                    current_input[f"{col}_lag{lag}"] = current_input[f"{col}_lag{lag-1}"]
+                current_input[f"{col}_lag1"] = pred[i]
+
+        return {"forecast": predictions}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
