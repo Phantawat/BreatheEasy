@@ -3,23 +3,6 @@
 **BreatheEasy** is a real-time indoor air quality monitoring system that collects and visualizes sensor data (temperature, humidity, PM2.5, PM10), integrates outdoor AQI and weather data, and provides health-related insights and predictions.
 
 ---
-
-## 📌 Table of Contents
-
-- [Background](#background)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Contributing](#contributing)
-- [Documentation](#documentation)
-- [Author](#author)
-- [License](#license)
-
----
-
 ## 📖 Background
 
 Air pollution and poor indoor air quality have become serious health concerns. BreatheEasy was developed to provide users with real-time insight into their indoor environment and compare it with outdoor conditions.
@@ -70,6 +53,12 @@ source venv/bin/activate
 ```bash
 cd backend
 pip install -r requirements.txt
+
+# Copy example.env to .env and configure it
+cp example.env .env  # macOS/Linux
+# OR
+copy example.env .env  # Windows (Command Prompt)
+
 py ./run.py
 ```
 
