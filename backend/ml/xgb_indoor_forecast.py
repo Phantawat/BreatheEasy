@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from xgboost import XGBRegressor
 from sklearn.multioutput import MultiOutputRegressor
-from utils.data_loader import load_combined_indoor_outdoor
+from utils.data_loader import load_outdoor_data
 
 
 def prepare_features(df, target_cols=None, n_lags=6):
@@ -39,7 +39,7 @@ def prepare_features(df, target_cols=None, n_lags=6):
 
 
 def forecast_full(hours: int = 6):
-    df = load_combined_indoor_outdoor()
+    df = load_outdoor_data()
 
     # Prepare lag features
     X, y, index = prepare_features(df)
