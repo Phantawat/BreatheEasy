@@ -420,7 +420,6 @@ input:checked + .toggle-slider:before {
 .lightblue { color: #38bdf8; }
 
 .gradient-text {
-  background: linear-gradient(to right, #0f766e, #0891b2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -523,4 +522,5 @@ input:checked + .toggle-slider:before {
 
 .chart-container {
   margin-top: 2rem;
+  background: #fff;
 }

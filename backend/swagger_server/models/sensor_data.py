@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
@@ -16,6 +16,5 @@ class SensorData(BaseModel):
     longitude: float
     room_id: int
 
-    class Config:
-        orm_mode = True  # Enable ORM mode for compatibility with SQLAlchemy models
+    model_config = ConfigDict(from_attributes=True)
         

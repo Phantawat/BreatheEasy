@@ -15,7 +15,7 @@ import '../styles/Shared.css';
 
 const ThresholdLegend = () => (
   <div className="card vibrant-bg neon-border shadow-md fade-in">
-    <h2 className="subtle-title gradient-text">📘 Threshold Key</h2>
+    <h2 className="subtle-title">📘 Threshold Key</h2>
     <div className="legend">
       <ul className="legend-list">
         <li><strong className="green">Green</strong> — Good PM2.5 & PM10 levels</li>
@@ -90,11 +90,11 @@ const SensorPage = () => {
 
   return (
     <div className="page-wrapper gradient-bg">
-      <h1 className="page-title gradient-text">📟 Sensor Dashboard</h1>
+      <h1 className="page-title">📟 Sensor Dashboard</h1>
 
       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
         <div className="card vibrant-bg vibrant-border shadow-md" style={{ flex: '1', minWidth: '250px' }}>
-          <h2 className="subtle-title gradient-text">📆 Select Date</h2>
+          <h2 className="subtle-title">📆 Select Date</h2>
           <form onSubmit={handleSubmit} className="date-form">
             <div className="form-group">
               <label htmlFor="date-picker" className="highlighted-label">Select a date:</label>
@@ -120,7 +120,7 @@ const SensorPage = () => {
 
         {latestData && (
           <div className="card gradient-bg vibrant-border shadow-md" style={{ flex: '2', minWidth: '300px' }}>
-            <h2 className="subtle-title gradient-text">🔍 Latest Sensor Reading</h2>
+            <h2 className="subtle-title">🔍 Latest Sensor Reading</h2>
             <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', marginTop: '1rem' }}>
               <div style={{ textAlign: 'center', padding: '1rem' }}>
                 <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f97316' }}>{latestData.temperature}°C</div>
@@ -149,7 +149,7 @@ const SensorPage = () => {
       {/* Date-based Table */}
       {dateData.length > 0 && (
         <div className="card vibrant-bg shadow-md fade-in">
-          <h2 className="subtle-title gradient-text">🗓️ Sensor Data for {selectedDate}</h2>
+          <h2 className="subtle-title">🗓️ Sensor Data for {selectedDate}</h2>
           <div className="table-container">
             <table className="table">
               <thead>
@@ -192,7 +192,7 @@ const SensorPage = () => {
       {monthlyData.length > 0 && (
         <>
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">🌡️ Temperature Trends</h2>
+            <h2 className="subtle-title">🌡️ Temperature Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -209,7 +209,7 @@ const SensorPage = () => {
           </div>
 
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">💧 Humidity Trends</h2>
+            <h2 className="subtle-title">💧 Humidity Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -224,7 +224,7 @@ const SensorPage = () => {
           </div>
 
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">🌬️ PM2.5 Trends</h2>
+            <h2 className="subtle-title">🌬️ PM2.5 Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -241,7 +241,7 @@ const SensorPage = () => {
           </div>
 
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">🌪️ PM10 Trends</h2>
+            <h2 className="subtle-title">🌪️ PM10 Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />

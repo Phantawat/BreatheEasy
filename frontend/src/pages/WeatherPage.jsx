@@ -15,7 +15,7 @@ import '../styles/Shared.css';
 
 const ThresholdLegend = () => (
   <div className="card vibrant-bg neon-border shadow-md fade-in">
-    <h2 className="subtle-title gradient-text">📘 Threshold Key</h2>
+    <h2 className="subtle-title ">📘 Threshold Key</h2>
     <div className="legend">
       <ul className="legend-list">
         <li><strong className="green">Green</strong> — Optimal Comfort (Humidity 30-60%)</li>
@@ -92,11 +92,11 @@ const WeatherPage = () => {
 
   return (
     <div className="page-wrapper gradient-bg">
-      <h1 className="page-title gradient-text">🌦️ Weather Dashboard</h1>
+      <h1 className="page-title">🌦️ Weather Dashboard</h1>
 
       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
         <div className="card vibrant-bg vibrant-border shadow-md" style={{ flex: '1', minWidth: '250px' }}>
-          <h2 className="subtle-title gradient-text">📆 Select Date</h2>
+          <h2 className="subtle-title">📆 Select Date</h2>
           <form onSubmit={handleSubmit} className="date-form">
             <div className="form-group">
               <label htmlFor="date-picker" className="highlighted-label">Select a date:</label>
@@ -122,7 +122,7 @@ const WeatherPage = () => {
 
         {latestData && (
           <div className="card gradient-bg vibrant-border shadow-md" style={{ flex: '2', minWidth: '300px' }}>
-            <h2 className="subtle-title gradient-text">🔍 Latest Weather Reading</h2>
+            <h2 className="subtle-title">🔍 Latest Weather Reading</h2>
             <div style={{
               display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', marginTop: '1rem'
             }}>
@@ -148,7 +148,7 @@ const WeatherPage = () => {
 
       {!loading && dateData.length > 0 && (
         <div className="card vibrant-bg shadow-md fade-in">
-          <h2 className="subtle-title gradient-text">🗓️ Weather Data for {selectedDate}</h2>
+          <h2 className="subtle-title">🗓️ Weather Data for {selectedDate}</h2>
           <div className="table-container">
             <table className="table">
               <thead>
@@ -184,7 +184,7 @@ const WeatherPage = () => {
         <>
           {/* Temperature */}
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">🌡️ Temperature Trends</h2>
+            <h2 className="subtle-title">🌡️ Temperature Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -202,7 +202,7 @@ const WeatherPage = () => {
 
           {/* Humidity */}
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">💧 Humidity Trends</h2>
+            <h2 className="subtle-title">💧 Humidity Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -220,7 +220,7 @@ const WeatherPage = () => {
 
           {/* Wind Speed */}
           <div className="card vibrant-bg shadow-md fade-in chart-container">
-            <h2 className="subtle-title gradient-text">🌬️ Wind Speed Trends</h2>
+            <h2 className="subtle-title">🌬️ Wind Speed Trends</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />

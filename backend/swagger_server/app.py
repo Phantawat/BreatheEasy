@@ -11,10 +11,6 @@ from .models.sensor_data import SensorData
 from .models.weather import Weather
 from utils.data_loader import load_latest_features, predict
 
-from ml.xgb_indoor_forecast import forecast_full, forecast_basic
-from ml.xgb_outdoor_forecast import forecast_outdoor
-
-
 
 
 from .controller.aqicn_controller import (

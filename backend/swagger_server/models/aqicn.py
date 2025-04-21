@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
@@ -12,5 +12,4 @@ class AQICN(BaseModel):
     pm10: float
     aqi_score: int
 
-    class Config:
-        orm_mode = True  # Enable ORM mode for compatibility with SQLAlchemy models
+    model_config = ConfigDict(from_attributes=True)
