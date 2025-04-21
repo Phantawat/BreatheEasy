@@ -94,13 +94,13 @@ npm run dev
 
 | Layer         | Technology                    |
 |---------------|-------------------------------|
-| Frontend      | React + Vite + Tailwind CSS   |
+| Frontend      | React    |
 | Backend       | FastAPI                       |
 | Sensors       | PMS7003, KY-015 (ESP32/KidBright) |
 | Data Pipeline | MySQL + Node-RED + Python     |
 | ML Models     | XGBoost + Pandas + Scikit-learn |
 | Visualization | Recharts                      |
-| Testing       | JMeter, Cypress, unittest     |
+| Testing       | JMeter, Selenium, unittest     |
 
 ---
 
