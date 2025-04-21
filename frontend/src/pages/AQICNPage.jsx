@@ -14,16 +14,18 @@ import {
 import '../styles/Shared.css';
 
 const ThresholdLegend = () => (
-  <div className="card">
-    <h2 className="card-title">📘 PM2.5 Threshold Legend</h2>
-    <ul className="legend-list">
-      <li><strong className="green">Green</strong> — Good (0.0 – 12.0)</li>
-      <li><strong className="yellow">Yellow</strong> — Moderate (12.1 – 35.4)</li>
-      <li><strong className="orange">Orange</strong> — Unhealthy for Sensitive Groups (35.5 – 55.4)</li>
-      <li><strong className="red">Red</strong> — Unhealthy (55.5 – 150.4)</li>
-      <li><strong className="purple">Purple</strong> — Very Unhealthy (150.5 – 250.4)</li>
-      <li><strong className="maroon">Maroon</strong> — Hazardous (250.5 – 500.4)</li>
-    </ul>
+  <div className="card vibrant-bg neon-border shadow-md fade-in">
+    <h2 className="subtle-title gradient-text">📘 PM2.5 Threshold Legend</h2>
+    <div className="legend">
+      <ul className="legend-list">
+        <li><strong className="green">Green</strong> — Good (0.0 – 12.0)</li>
+        <li><strong className="yellow">Yellow</strong> — Moderate (12.1 – 35.4)</li>
+        <li><strong className="orange">Orange</strong> — Unhealthy for Sensitive Groups (35.5 – 55.4)</li>
+        <li><strong className="red">Red</strong> — Unhealthy (55.5 – 150.4)</li>
+        <li><strong className="purple">Purple</strong> — Very Unhealthy (150.5 – 250.4)</li>
+        <li><strong className="maroon">Maroon</strong> — Hazardous (250.5 – 500.4)</li>
+      </ul>
+    </div>
   </div>
 );
 
@@ -97,48 +99,62 @@ const AQICNPage = () => {
   };
 
   return (
-    <div className="page-wrapper fade-in">
+    <div className="page-wrapper gradient-bg">
       <h1 className="page-title gradient-text">🌿 AQICN Dashboard</h1>
 
-      <div className="grid-row">
-        <div className="card narrow glassy">
-          <h2 className="card-title">📆 Select Date</h2>
+      <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div className="card vibrant-bg vibrant-border shadow-md" style={{ flex: '1', minWidth: '250px' }}>
+          <h2 className="subtle-title gradient-text">📆 Select Date</h2>
           <form onSubmit={handleSubmit} className="date-form">
             <div className="form-group">
-              <label htmlFor="date-picker">Select a date:</label>
-              <select
-                id="date-picker"
-                value={selectedDate}
-                onChange={handleDateChange}
-                className="date-input"
-              >
-                {availableDates.map(date => (
-                  <option key={date} value={date}>{date}</option>
-                ))}
-              </select>
+              <label htmlFor="date-picker" className="highlighted-label">Select a date:</label>
+              <div className="select-wrapper">
+                <select
+                  id="date-picker"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  className="fancy-select"
+                >
+                  {availableDates.map(date => (
+                    <option key={date} value={date}>{date}</option>
+                  ))}
+                </select>
+                <div className="select-icon">▼</div>
+              </div>
             </div>
-            <button type="submit" className="button" disabled={loading}>
+            <button type="submit" className="button primary glassy full-width">
               {loading ? 'Loading...' : 'Get Data'}
             </button>
           </form>
         </div>
 
         {latestData && (
-          <div className="card wide glassy">
-            <h2 className="card-title">🌫️ Latest Air Quality</h2>
-            <div className="details">
-              <p><strong>📅 Timestamp:</strong><br /> {new Date(latestData.ts).toLocaleString()}</p>
-              <p><strong>🌬️ PM2.5:</strong> {latestData.pm25}</p>
-              <p><strong>🌪️ PM10:</strong> {latestData.pm10}</p>
-              <p><strong>📈 AQI Score:</strong> {latestData.aqi_score}</p>
+          <div className="card gradient-bg vibrant-border shadow-md" style={{ flex: '2', minWidth: '300px' }}>
+            <h2 className="subtle-title gradient-text">🌫️ Latest Air Quality</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', marginTop: '1rem' }}>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f97316' }}>{latestData.pm25}</div>
+                <div style={{ fontSize: '1rem', color: '#64748b' }}>PM2.5</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#38bdf8' }}>{latestData.pm10}</div>
+                <div style={{ fontSize: '1rem', color: '#64748b' }}>PM10</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ef4444' }}>{latestData.aqi_score}</div>
+                <div style={{ fontSize: '1rem', color: '#64748b' }}>AQI Score</div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', color: '#64748b' }}>
+              Last Updated: {new Date(latestData.ts).toLocaleString()}
             </div>
           </div>
         )}
       </div>
 
       {dateData.length > 0 && (
-        <div className="card">
-          <h2 className="card-title">🗓️ Air Quality for {selectedDate}</h2>
+        <div className="card vibrant-bg shadow-md fade-in">
+          <h2 className="subtle-title gradient-text">🗓️ Air Quality for {selectedDate}</h2>
           <div className="table-container">
             <table className="table">
               <thead>
@@ -164,58 +180,50 @@ const AQICNPage = () => {
         </div>
       )}
 
-      {!loading && dateData.length === 0 && selectedDate && !error && (
-        <div className="card">
-          <p className="no-data">No data available for {selectedDate}.</p>
-        </div>
-      )}
-
-      {error && <p className="error subtle-margin-top">{error}</p>}
+      {error && <div className="error-message">{error}</div>}
       {loading && <p className="loading subtle-margin-top">Loading data...</p>}
 
       <ThresholdLegend />
 
-      {/* PM2.5 Chart */}
       {monthlyData.length > 0 && (
-        <div className="chart-container fade-in">
-          <h2 className="card-title">📊 PM2.5 Trends</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <ReferenceArea y1={0} y2={12.0} fill="green" fillOpacity={0.2} />
-              <ReferenceArea y1={12.1} y2={35.4} fill="yellow" fillOpacity={0.2} />
-              <ReferenceArea y1={35.5} y2={55.4} fill="orange" fillOpacity={0.2} />
-              <ReferenceArea y1={55.5} y2={150.4} fill="red" fillOpacity={0.2} />
-              <ReferenceArea y1={150.5} y2={250.4} fill="purple" fillOpacity={0.2} />
-              <ReferenceArea y1={250.5} y2={500.4} fill="maroon" fillOpacity={0.2} />
-              <Line type="monotone" dataKey="pm25" stroke="#f97316" name="PM2.5" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+        <>
+          <div className="card vibrant-bg shadow-md fade-in chart-container">
+            <h2 className="subtle-title gradient-text">📊 PM2.5 Trends</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <ReferenceArea y1={0} y2={12.0} fill="green" fillOpacity={0.2} />
+                <ReferenceArea y1={12.1} y2={35.4} fill="yellow" fillOpacity={0.2} />
+                <ReferenceArea y1={35.5} y2={55.4} fill="orange" fillOpacity={0.2} />
+                <ReferenceArea y1={55.5} y2={150.4} fill="red" fillOpacity={0.2} />
+                <ReferenceArea y1={150.5} y2={250.4} fill="purple" fillOpacity={0.2} />
+                <ReferenceArea y1={250.5} y2={500.4} fill="maroon" fillOpacity={0.2} />
+                <Line type="monotone" dataKey="pm25" stroke="#f97316" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
 
-      {/* PM10 Chart */}
-      {monthlyData.length > 0 && (
-        <div className="chart-container fade-in">
-          <h2 className="card-title">📊 PM10 Trends</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <ReferenceArea y1={0} y2={54} fill="green" fillOpacity={0.2} />
-              <ReferenceArea y1={55} y2={154} fill="yellow" fillOpacity={0.2} />
-              <ReferenceArea y1={155} y2={500} fill="red" fillOpacity={0.2} />
-              <Line type="monotone" dataKey="pm10" stroke="#38bdf8" name="PM10" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+          <div className="card vibrant-bg shadow-md fade-in chart-container">
+            <h2 className="subtle-title gradient-text">📊 PM10 Trends</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <ReferenceArea y1={0} y2={54} fill="green" fillOpacity={0.2} />
+                <ReferenceArea y1={55} y2={154} fill="yellow" fillOpacity={0.2} />
+                <ReferenceArea y1={155} y2={500} fill="red" fillOpacity={0.2} />
+                <Line type="monotone" dataKey="pm10" stroke="#38bdf8" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </>
       )}
     </div>
   );

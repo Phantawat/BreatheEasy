@@ -104,7 +104,7 @@ const ForecastPage = () => {
     <div className="page-wrapper">
       <h1 className="page-title gradient-text">📈 Forecasting Dashboard</h1>
 
-      <div className="card fade-in full-width centered neon-border vibrant-bg">
+      <div className="card vibrant-bg shadow-md fade-in">
         <h2 className="card-title">⚙️ Forecast Settings</h2>
 
         <div className="form-group toggle-group">
