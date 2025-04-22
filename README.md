@@ -3,6 +3,7 @@
 **BreatheEasy** is a real-time indoor air quality monitoring system that collects and visualizes sensor data (temperature, humidity, PM2.5, PM10), integrates outdoor AQI and weather data, and provides health-related insights and predictions.
 
 ---
+
 ## 📖 Background
 
 Air pollution and poor indoor air quality have become serious health concerns. BreatheEasy was developed to provide users with real-time insight into their indoor environment and compare it with outdoor conditions.
@@ -36,40 +37,74 @@ git clone https://github.com/Phantawat/BreatheEasy.git
 cd BreatheEasy
 ```
 
+---
+
 ### 2. Backend Setup (FastAPI + MySQL)
 
 #### 🔹 Create and activate Python virtual environment:
+
+<details>
+<summary><strong>Windows</strong></summary>
+
 ```bash
-# Windows
 python -m venv venv
 venv\Scripts\activate
+```
+</details>
 
-# macOS/Linux
+<details>
+<summary><strong>macOS / Linux</strong></summary>
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
+</details>
+
+---
 
 #### 🔹 Install dependencies and run backend:
+
 ```bash
 cd backend
 pip install -r requirements.txt
-
-# Copy example.env to .env and configure it
-cp example.env .env  # macOS/Linux
-# OR
-copy example.env .env  # Windows (Command Prompt)
-
-py ./run.py
 ```
 
+Then copy the environment file:
+
+<details>
+<summary><strong>Windows</strong></summary>
+
+```bash
+copy example.env .env
+```
+</details>
+
+<details>
+<summary><strong>macOS / Linux</strong></summary>
+
+```bash
+cp example.env .env
+```
+</details>
+
+Finally, run the FastAPI server:
+
+```bash
+python run.py
+```
+
+---
+
 ### 3. Frontend Setup (React + Vite)
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-> ✅ Make sure to configure the `.env` files for database and API keys in both `/backend` and `/frontend`.
+> ✅ Be sure to configure `.env` files in both `backend/` and `frontend/` directories with your database connection and API keys.
 
 ---
 
@@ -116,3 +151,4 @@ GitHub: [@Phantawat](https://github.com/Phantawat) [@tarothanawat](https://githu
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
