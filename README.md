@@ -110,9 +110,9 @@ npm run dev
 
 ## 🧪 Testing
 
-- API Load Testing: JMeter test plans included (`/tests/jmeter`)
-- E2E UI Testing: Cypress tests (`/frontend/cypress`)
+- API Load Testing: JMeter 
 - Unit Testing: FastAPI routes tested with `unittest` in `/backend/tests`
+- UI Testing: `/frontend/tests`
 
 ---
 
@@ -129,13 +129,13 @@ npm run dev
 
 | Layer         | Technology                    |
 |---------------|-------------------------------|
-| Frontend      | React + Vite + Tailwind CSS   |
+| Frontend      | React    |
 | Backend       | FastAPI                       |
 | Sensors       | PMS7003, KY-015 (ESP32/KidBright) |
 | Data Pipeline | MySQL + Node-RED + Python     |
 | ML Models     | XGBoost + Pandas + Scikit-learn |
 | Visualization | Recharts                      |
-| Testing       | JMeter, Cypress, unittest     |
+| Testing       | JMeter, Selenium, unittest     |
 
 ---
 
