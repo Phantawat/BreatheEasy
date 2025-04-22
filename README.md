@@ -43,23 +43,25 @@ cd BreatheEasy
 
 #### 🔹 Create and activate Python virtual environment:
 
-<details>
-<summary><strong>Windows</strong></summary>
-
+**Windows:**
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
-</details>
 
-<details>
-<summary><strong>macOS / Linux</strong></summary>
-
+**macOS / Linux:**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
-</details>
+
+---
+
+> ⚠️ **TensorFlow Compatibility Notice:**  
+> TensorFlow is **not yet compatible with Python 3.13**.  
+> If you encounter an error installing `tensorflow` from `requirements.txt`, please switch to **Python 3.12.7**.
+>
+> Download Python 3.12.7: https://www.python.org/downloads/release/python-3127/
 
 ---
 
@@ -72,21 +74,15 @@ pip install -r requirements.txt
 
 Then copy the environment file:
 
-<details>
-<summary><strong>Windows</strong></summary>
-
+**Windows:**
 ```bash
 copy example.env .env
 ```
-</details>
 
-<details>
-<summary><strong>macOS / Linux</strong></summary>
-
+**macOS / Linux:**
 ```bash
 cp example.env .env
 ```
-</details>
 
 Finally, run the FastAPI server:
 
@@ -96,12 +92,12 @@ python run.py
 
 ---
 
-### 3. Frontend Setup (React + Vite)
+### 3. Frontend Setup (React)
 
 ```bash
 cd frontend
 npm install
-npm run dev
+npm start
 ```
 
 > ✅ Be sure to configure `.env` files in both `backend/` and `frontend/` directories with your database connection and API keys.
